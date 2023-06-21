@@ -1,0 +1,8 @@
+[MASTER]
+load-plugins = pylint_django
+
+[TYPECHECK]
+ignored-modules = django.*
+
+[MESSAGES CONTROL]
+disable = django-not-configured, invalid-name
