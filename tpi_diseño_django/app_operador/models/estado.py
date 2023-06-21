@@ -4,10 +4,6 @@ from django.db import models
 class Estado(models.Model):
     nombre = models.CharField(max_length=100, default='iniciada')
 
-    # No hace falta hacer esto, pero se puede hacer
-    # def __init__(self):
-    #     self.nombre = None
-
     def __str__(self):
         return self.getNombre()
 
@@ -23,6 +19,9 @@ class Estado(models.Model):
 
     def esIniciada(self) -> bool:
         return self.getNombre().lower() == 'iniciada'
+
+    def esEnCurso(self) -> bool:
+        return self.getNombre().lower() == 'en curso'
 
     class Meta:
         db_table = 'estado'

@@ -7,12 +7,12 @@ from .opcion_validacion import OpcionValidacion
 class InformacionCliente(models.Model):
     datoAValidar = models.CharField(max_length=255, null=True)
 
-    # FOREIGN KEYS
-    tipoInformacion = models.ForeignKey(TipoInformacion, on_delete=models.CASCADE)
-    validacion = models.ForeignKey(Validacion, on_delete=models.CASCADE)
+    # # FOREIGN KEYS
+    # tipoInformacion = models.ForeignKey(TipoInformacion, on_delete=models.CASCADE)
+    # validacion = models.ForeignKey(Validacion, on_delete=models.CASCADE)
 
-    # RELACION MUCHOS A MUCHOS
-    opcionesValidacion = models.ManyToManyField(OpcionValidacion)
+    # # RELACION MUCHOS A MUCHOS
+    # opcionesValidacion = models.ManyToManyField(OpcionValidacion)
 
     def __str__(self):
         return f'''

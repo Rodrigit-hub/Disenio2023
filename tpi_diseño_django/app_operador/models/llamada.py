@@ -2,6 +2,7 @@ from django.db import models
 from .cliente import Cliente
 from .estado import Estado
 from .cambio_estado import CambioEstado
+from .sub_opcion_llamada import SubOpcionLlamada
 
 
 class Llamada(models.Model):
@@ -12,10 +13,13 @@ class Llamada(models.Model):
     observacionAuditor = models.TextField(null=True)
 
     # Foreign Keys
+    subOpcion = models.ForeignKey(SubOpcionLlamada, on_delete=models.CASCADE)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     estadoActual = models.ForeignKey(Estado, on_delete=models.CASCADE)
 
     # RELACION MUCHOS A MUCHOS
+
+    # VER ESTO
     cambiosEstado = models.ManyToManyField(CambioEstado)
 
     def __str__(self) -> str:

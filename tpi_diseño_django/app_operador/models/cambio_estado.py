@@ -5,6 +5,7 @@ from .estado import Estado
 
 class CambioEstado(models.Model):
     fechaHoraInicio = models.DateTimeField(default=datetime.now)
+    fechaHoraFin = models.DateTimeField(null=True)
     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
 
     def __str__(self):
