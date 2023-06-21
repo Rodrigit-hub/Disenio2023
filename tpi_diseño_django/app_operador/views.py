@@ -11,6 +11,9 @@ def index(request):
 
 def gestor(request):
     gestor = GestorRtaOperador()
-    estadoEnCurso = gestor.buscarEstadoEnCurso()
+    # estadoEnCurso = gestor.buscarEstadoEnCurso()
+    # fechaHoraActual = gestor.obtenerFechaHoraActual()
+    # print(fechaHoraActual)
+    gestor.recibirLlamada()
     # print(estadoEnCurso)
-    # return HttpResponse(f'{estadoEnCurso.getNombre()}')
+    return HttpResponse(f'Hello')

@@ -23,5 +23,8 @@ class CambioEstado(models.Model):
     def getNombreEstado(self):
         return self.estado.getNombre()
 
+    def getNombreEstado(self):
+        return self.estado.getNombre()
+
     class Meta:
         db_table = 'cambio_estado'

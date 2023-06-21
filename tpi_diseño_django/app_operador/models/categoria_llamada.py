@@ -7,7 +7,6 @@ class CategoriaLlamada(models.Model):
     mensajeSubopciones = models.TextField(null=True)
     nroOrden = models.IntegerField(default=0)
     nombre = models.CharField(max_length=255, default='')
-
     # Relaciones con otros modelos
     opciones = models.ManyToManyField(OpcionLlamada)
 
@@ -46,6 +45,9 @@ class CategoriaLlamada(models.Model):
         # descripcion = f"{self.nombre}: {self.mensajeSubopciones}"
         # sub_opciones = ", ".join([str(sub_opcion) for sub_opcion in self.sub_opciones.all()])
         # return f"{descripcion} ({sub_opciones})"
+
+    def getCategoriaOpcionSubOpcion(self):
+        pass
 
     def buscarValidaciones(self):
         pass

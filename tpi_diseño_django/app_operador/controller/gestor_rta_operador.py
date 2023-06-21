@@ -1,4 +1,5 @@
 # controller/gestor_rta_operador.py
+from datetime import datetime
 from ..models import Estado, Llamada, CategoriaLlamada
 # Accion?
 
@@ -6,72 +7,36 @@ from ..models import Estado, Llamada, CategoriaLlamada
 
 
 class GestorRtaOperador:
-    # llamadas = Llamada.objects.all()
-    # estado = Llamada.objects.all()
-    estadoEnCurso = None
+    categoriaLlamadaSeleccionada = None
 
     def nuevaRespuestaOperador(self):
-        pass
+        self.recibirLlamada()
+
+    def recibirLlamada(self):
+        self.llamadaActual = Llamada.objects.filter(
+            estadoActual__nombre='iniciada')
+        print(self.llamadaActual)
 
     def buscarEstadoEnCurso(self):
         estados = Estado.objects.all()
         enCurso = list(filter(lambda estado: estado.esEnCurso(), estados))[0]
-        self.estadoEnCurso = enCurso
+        return enCurso
 
+    def buscarEstadoIniciada(self):
+        estados = Estado.objects.all()
+        estadoIniciada = list(
+            filter(lambda estado: estado.esEnIniciada(), estados))[0]
+        return estadoIniciada
 
-# def obtener_cambio_estado(cambio_estado_id):
-#     cambio_estado = CambioEstado.objects.get(pk=cambio_estado_id)
-#     return cambio_estado
+    def obtenerFechaHoraActual(self):
+        fechaHoraActual = datetime.now()
+        return fechaHoraActual
 
-# # Métodos relacionados con Estado
+    def getLlamadaEnCurso(self) -> Llamada:
+        return self.llamadaEnCurso
 
+    def setLlamadaEnCurso(self, llamada):
+        self.llamadaEnCurso = llamada
 
-# def obtener_estado(estado_id):
-#     estado = Estado.objects.get(pk=estado_id)
-#     return estado
-
-
-# # Agrega aquí más métodos relacionados con otros modelos
-
-# # class GestorRtaOperador:
-# #     def __init__(self):
-# #         pass
-
-# #     def nuevaRespuestaOperador(self, ):
-# #         pass
-
-# #     def recibirLlamada(self, ):
-# #         pass
-
-# #     def buscarEstadoEnCurso(self, ):
-# #         pass
-
-# #     def obtenerDatosLlamada(self, ):
-# #         pass
-
-# #     def buscarValidaciones(self, ):
-# #         pass
-
-# #     def tomarDatosValidacion(self, ):
-# #         pass
-
-# #     def validarInformacionCliente(self, ):
-# #         pass
-
-# #     def tomarRtaOperador(self, ):
-# #         pass
-
-# #     def confirmar(self, ):
-# #         pass
-
-# #     def finalizarLlamada(self, ):
-# #         pass
-
-# #     def obtenerFechaYHoraActual(self, ):
-# #         pass
-
-# #     def buscarEstadoFinalizada(self, ):
-# #         pass
-
-# #     def finCU(self, ):
-# #         pass
+    def buscarDatosLlamada(self):
+        pass

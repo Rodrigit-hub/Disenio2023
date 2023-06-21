@@ -15,10 +15,7 @@ class InformacionCliente(models.Model):
     # opcionesValidacion = models.ManyToManyField(OpcionValidacion)
 
     def __str__(self):
-        return f'''
-        {self.getDatoAValidar()} -
-        {self.tipoInformacion.getDescripcion()} -
-        {self.validacion.getNombre()}'''
+        return f'{self.getDatoAValidar()}'
 
     def esInformacionCorrecta(self, informacion):
         pass
