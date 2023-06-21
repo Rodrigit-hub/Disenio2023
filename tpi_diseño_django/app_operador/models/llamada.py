@@ -13,7 +13,7 @@ class Llamada(models.Model):
 
     # Foreign Keys
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    estadoActual= models.ForeignKey(Estado, on_delete=models.CASCADE)
+    estadoActual = models.ForeignKey(Estado, on_delete=models.CASCADE)
 
     # RELACION MUCHOS A MUCHOS
     cambiosEstado = models.ManyToManyField(CambioEstado)
@@ -41,8 +41,6 @@ class Llamada(models.Model):
     def setDescripcionOperador(self, descripcion):
         self.descripcionOperador = descripcion
         self.save()
-
-
 
     def setEstadoActual(self, nuevo_estado):
         self.estadoActual = nuevo_estado
