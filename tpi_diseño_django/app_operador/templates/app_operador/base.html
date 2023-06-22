@@ -1,13 +1,104 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/styles.css' %}" />
+    <script defer src="{% static 'js/script.js' %}"></script>
     <title>Página principal</title>
   </head>
 
   <body>
-    <h1>Hello World</h1>
-    <button>Botón</button>
+    <main>
+      <header>
+        <h2>Registro de respuesta por operador</h2>
+        <h4>Operador: <span></span></h4>
+      </header>
+      <div class="form-container">
+        <form
+          id="form_verificar_validacion"
+          action="verificar_validacion"
+          class="form"
+          method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="id_llamada">
+              ID Llamada:
+              <input
+                type="text"
+                id="id_llamada"
+                name="id_llamada"
+                value="{{ llamada.getNombreCliente }}" />
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="nombre_cliente">
+              Nombre:
+              <input type="text" id="nombre_cliente" name="nombre_cliente" />
+            </label>
+            <label for="estado_llamada">
+              Estado:
+              <input
+                type="text"
+                id="estado_llamada"
+                name="estado_llamada"
+                value="{{ llamada.getEstadoActual }}" />
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="categoria_seleccionada">
+              Categoría seleccionada:
+              <input
+                type="text"
+                id="categoria_seleccionada"
+                name="categoria_seleccionada" />
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="opcion_seleccionada">
+              Opción seleccionada:
+              <input
+                type="text"
+                id="opcion_seleccionada"
+                name="opcion_seleccionada" />
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+              Sub Opción 1 seleccionada:
+              <input type="text" class="opcion-seleccionada" />
+            </label>
+            <label>
+              Sub Opción 2 seleccionada:
+              <input type="text" class="opcion-seleccionada" />
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+              Validación 1:
+              <input
+                type="text"
+                class="validacion-seleccionada"
+                placeholder="Ingresar respuesta" />
+            </label>
+            <label>
+              Validación 2:
+              <input
+                type="text"
+                class="validacion-seleccionada"
+                placeholder="Ingresar respuesta" />
+            </label>
+          </div>
+          <div class="form-group">
+            <button type="submit">Verificar</button>
+          </div>
+        </form>
+      </div>
+    </main>
   </body>
 </html>

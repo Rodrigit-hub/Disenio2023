@@ -1,10 +1,10 @@
-from datetime import datetime
+from django.utils import timezone
 from django.db import models
 from .estado import Estado
 
 
 class CambioEstado(models.Model):
-    fechaHoraInicio = models.DateTimeField(default=datetime.now)
+    fechaHoraInicio = models.DateTimeField(default=timezone.now)
     fechaHoraFin = models.DateTimeField(null=True)
     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
 
@@ -19,9 +19,6 @@ class CambioEstado(models.Model):
 
     def getFechaHoraInicio(self):
         return str(self.fechaHoraInicio)
-
-    def getNombreEstado(self):
-        return self.estado.getNombre()
 
     def getNombreEstado(self):
         return self.estado.getNombre()

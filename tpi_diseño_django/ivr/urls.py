@@ -20,6 +20,10 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
-    path('gestor/', views.gestor)
+    path('gestor/', views.gestor),
+    path("verificar_validacion", views.verificar_validacion,
+         name="verificar_validacion"),
+    path("segundo_form", views.segundo_form,
+         name="segundo_form"),
+    path('', views.index)
 ]

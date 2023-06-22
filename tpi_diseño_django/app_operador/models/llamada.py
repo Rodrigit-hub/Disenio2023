@@ -34,11 +34,17 @@ class Llamada(models.Model):
         cambio_estado = CambioEstado()
         cambio_estado.save()
         self.cambiosEstado.add(cambio_estado)
-        print(self.cambiosEstado)
 
     def esDePeriodo(self, fecha_inicio, fecha_fin):
         # Lógica para verificar si la llamada pertenece a un periodo específico
         pass
+
+    def getEstadoActual(self):
+        return self.estadoActual.getNombre()
+
+    def setEstadoActual(self, estado: Estado):
+        self.estadoActual = estado
+        self.save()
 
     def getDuracion(self):
         return int(self.duracion)
