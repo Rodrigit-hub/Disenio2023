@@ -7,26 +7,33 @@ from ..models import Estado, Llamada, CategoriaLlamada
 
 
 class GestorRtaOperador:
-    categoriaLlamadaSeleccionada = None
+    llamadaEnCurso = None
+    operador = {
+        'nombre': 'Test',
+        'apellido': 'Test'
+    }
+
+    def __init__(self, llamada) -> None:
+        self.setLlamadaEnCurso(llamada)
 
     def nuevaRespuestaOperador(self):
         self.recibirLlamada()
 
     def recibirLlamada(self):
-        self.llamadaActual = Llamada.objects.filter(
-            estadoActual__nombre='iniciada')
-        print(self.llamadaActual)
+        estadoEnCurso = self.buscarEstadoEnCurso()
+        self.llamadaEnCurso.tomadaPorOperador(self.operador, estadoEnCurso)
 
     def buscarEstadoEnCurso(self):
         estados = Estado.objects.all()
-        enCurso = list(filter(lambda estado: estado.esEnCurso(), estados))[0]
-        return enCurso
+        estadoEnCurso = next(
+            (estado for estado in estados if estado.esEnCurso()), None)
+        return estadoEnCurso
 
-    def buscarEstadoIniciada(self):
-        estados = Estado.objects.all()
-        estadoIniciada = list(
-            filter(lambda estado: estado.esEnIniciada(), estados))[0]
-        return estadoIniciada
+    # def buscarEstadoIniciada(self):
+    #     estados = Estado.objects.all()
+    #     estadoIniciada = list(
+    #         filter(lambda estado: estado.esEnIniciada(), estados))[0]
+    #     return estadoIniciada
 
     def obtenerFechaHoraActual(self):
         fechaHoraActual = datetime.now()

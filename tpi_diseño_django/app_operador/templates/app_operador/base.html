@@ -33,13 +33,17 @@
                 type="text"
                 id="id_llamada"
                 name="id_llamada"
-                value="{{ llamada.getNombreCliente }}" />
+                value="123" />
             </label>
           </div>
           <div class="form-group">
             <label for="nombre_cliente">
               Nombre:
-              <input type="text" id="nombre_cliente" name="nombre_cliente" />
+              <input
+                type="text"
+                id="nombre_cliente"
+                name="nombre_cliente"
+                value="{{llamada.getNombreCliente}}" />
             </label>
             <label for="estado_llamada">
               Estado:

@@ -6,9 +6,6 @@ from .sub_opcion_llamada import SubOpcionLlamada
 
 
 class Llamada(models.Model):
-    # def __init__(self, parametro1):
-    #     print(parametro1)
-
     descripcionOperador = models.CharField(max_length=255, null=True)
     detalleAccionRequerida = models.TextField(null=True)
     duracion = models.IntegerField(default=0)
@@ -18,7 +15,10 @@ class Llamada(models.Model):
     # Foreign Keys
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     subOpcion = models.ForeignKey(
-        SubOpcionLlamada, on_delete=models.CASCADE, null=True)
+        SubOpcionLlamada,
+        on_delete=models.CASCADE,
+        null=True
+    )
     estadoActual = models.ForeignKey(Estado, on_delete=models.CASCADE)
 
     # VER ESTO
@@ -30,10 +30,13 @@ class Llamada(models.Model):
     def calcularDuracion(self):
         pass
 
-    def tomadaPorOperador(self):
-        cambio_estado = CambioEstado()
-        cambio_estado.save()
-        self.cambiosEstado.add(cambio_estado)
+    def tomadaPorOperador(self, operador, estadoEnCurso):
+        # cambio_estado = CambioEstado(estadoEnCurso)
+        # cambio_estado.save()
+        # self.cambiosEstado.add(cambio_estado)
+        cambioEstado = CambioEstado.objects.create(
+            llamada=self, estado=estadoEnCurso)
+        self.cambiosEstado.add(cambioEstado)
 
     def esDePeriodo(self, fecha_inicio, fecha_fin):
         # Lógica para verificar si la llamada pertenece a un periodo específico
