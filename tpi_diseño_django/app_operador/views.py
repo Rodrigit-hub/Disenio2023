@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from .controller import GestorRtaOperador
 from .models import Llamada, Estado, Cliente, SubOpcionLlamada, CategoriaLlamada, OpcionLlamada, InformacionCliente, Validacion
 # from .forms import VerificarValidacionForm
@@ -89,19 +89,18 @@ def index(request):
         llamadaActual = Llamada.objects.first()
 
     if not CategoriaLlamada.objects.exists():
-        categoríaSeleccionada = CategoriaLlamada(
+        categoriaSeleccionada = CategoriaLlamada(
             audioMensajeOpciones='Informar un robo y solicitar una nueva tarjeta (1) - Informar un robo y anular la tarjeta (2)',
             mensajeOpciones='',
             nroOrden=1,
-            nombre='Informar un robo',
-            llamada=llamadaActual,
-
+            nombre='Informar un robo'
         )
-        categoríaSeleccionada.save()
+        categoriaSeleccionada.save()
+        categoriaSeleccionada.llamada.set([llamadaActual])
     else:
         # En caso de que haya sub opción cargada
         # Traemos la primera
-        categoríaSeleccionada = CategoriaLlamada.objects.first()
+        categoriaSeleccionada = CategoriaLlamada.objects.first()
 
     if not OpcionLlamada.objects.exists():
         opcionSeleccionada = OpcionLlamada(
@@ -109,10 +108,10 @@ def index(request):
             mensajeSubOpciones='',
             nroOrden=1,
             nombre='Informar un robo y solicitar una nueva tarjeta',
-            llamada=llamadaActual,
-            categoria=categoríaSeleccionada
+            categoria=categoriaSeleccionada
         )
         opcionSeleccionada.save()
+        opcionSeleccionada.llamada.set([llamadaActual])
     else:
         # En caso de que haya sub opción cargada
         # Traemos la primera
@@ -121,11 +120,12 @@ def index(request):
     if not SubOpcionLlamada.objects.exists():
         subOpcionSeleccionada = SubOpcionLlamada(
             nroOrden=1,
-            llamada=llamadaActual,
             nombre='Si cuenta con los datos de la tarjeta',
             opcion=opcionSeleccionada
         )
         subOpcionSeleccionada.save()
+        subOpcionSeleccionada.llamada.set([llamadaActual])
+
     else:
         # En caso de que haya sub opción cargada
         # Traemos la primera
@@ -166,7 +166,7 @@ def index(request):
     context = {
         'llamada': llamadaActual,
         'cliente': cliente,
-        'categoria': categoríaSeleccionada,
+        'categoria': categoriaSeleccionada,
         'opcion': opcionSeleccionada,
         'subOpcion': subOpcionSeleccionada,
         'validaciones': validaciones
@@ -181,17 +181,13 @@ def verificar_validacion(request: HttpRequest):
     validacion = data.get('validacion')
     validacion_data = data.get('validacionData')
 
-    gestor.validarInformacionCliente(
+    esInformacionValida = gestor.validarInformacionCliente(
         id_llamada=id_llamada,
         validacion=validacion,
         validacion_data=validacion_data
     )
 
-    # validacion = None
-    # if request.method == "POST":
-    #     formulario_validacion = VerificarValidacionForm(data=request.POST)
-    #     print(formulario_validacion.is_valid())
-    #     if formulario_validacion.is_valid():
-    #         validacion = formulario_validacion.['validacion']
-
-    return HttpResponse("hello")
+    if esInformacionValida:
+        return JsonResponse({"status": "Validado con éxito"})
+    else:
+        return JsonResponse({"status": "Información inválida"})

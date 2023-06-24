@@ -35,7 +35,6 @@ class Cliente(models.Model):
         validacionDeCliente = info_cliente.validacion.getNombre()
         if validacion == validacionDeCliente:
             datoAValidar = info_cliente.datoAValidar
-            # print(datoAValidar)
             if validacion_data == datoAValidar:
                 return True
         return False

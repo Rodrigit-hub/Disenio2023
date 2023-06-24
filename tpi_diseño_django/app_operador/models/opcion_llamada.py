@@ -12,12 +12,7 @@ class OpcionLlamada(models.Model):
     # Relaciones con otros modelos
     # subOpciones = models.ManyToManyField(SubOpcionLlamada)
     categoria = models.ForeignKey(CategoriaLlamada, on_delete=models.CASCADE)
-
-    llamada = models.ForeignKey(
-        Llamada,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    llamada = models.ManyToManyField(Llamada)
 
     def __str__(self) -> str:
         return self.getNombre()

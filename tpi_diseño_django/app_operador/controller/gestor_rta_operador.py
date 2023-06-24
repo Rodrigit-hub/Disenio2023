@@ -71,4 +71,4 @@ class GestorRtaOperador:
             validacion=validacion,
             validacion_data=validacion_data
         )
-        print(esInformacionCorrecta)
+        return esInformacionCorrecta

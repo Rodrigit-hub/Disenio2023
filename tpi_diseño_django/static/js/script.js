@@ -36,6 +36,6 @@ formulario.addEventListener('submit', e => {
     headers: { 'X-CSRFToken': csrfToken },
     body: JSON.stringify(body),
   })
-
-  console.log(body)
+    .then(data => data.json())
+    .then(console.log)
 })

@@ -11,11 +11,7 @@ class CategoriaLlamada(models.Model):
     # opciones = models.ManyToManyField(OpcionLlamada)
 
     # La llamada necesita conocer Categoría, Opción y SubOpción marcadas por el cliente
-    llamada = models.ForeignKey(
-        Llamada,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    llamada = models.ManyToManyField(Llamada)
 
     def __str__(self):
         return self.getNombre()
