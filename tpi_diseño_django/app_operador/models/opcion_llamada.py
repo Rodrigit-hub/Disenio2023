@@ -1,17 +1,24 @@
 from django.db import models
-from .sub_opcion_llamada import SubOpcionLlamada
-from .validacion import Validacion
+
+from .llamada import Llamada
+from .categoria_llamada import CategoriaLlamada
 
 
 class OpcionLlamada(models.Model):
-    audioMensajeSubopciones = models.CharField(max_length=255, null=True)
-    mensajeSubopciones = models.TextField(null=True)
+    audioMensajeSubOpciones = models.TextField(null=True)
+    mensajeSubOpciones = models.TextField(null=True)
     nroOrden = models.IntegerField(null=True)
     nombre = models.CharField(max_length=255, default='')
 
     # Relaciones con otros modelos
-    subOpciones = models.ManyToManyField(SubOpcionLlamada)
-    validaciones = models.ManyToManyField(Validacion)
+    # subOpciones = models.ManyToManyField(SubOpcionLlamada)
+    categoria = models.ForeignKey(CategoriaLlamada, on_delete=models.CASCADE)
+
+    llamada = models.ForeignKey(
+        Llamada,
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     def __str__(self) -> str:
         return self.getNombre()

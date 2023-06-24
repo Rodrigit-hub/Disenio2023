@@ -1,7 +1,7 @@
 from django.db import models
-from .validacion import Validacion
+# from .validacion import Validacion
 from .tipo_informacion import TipoInformacion
-from .opcion_validacion import OpcionValidacion
+# from .opcion_validacion import OpcionValidacion
 
 
 class InformacionCliente(models.Model):
@@ -21,9 +21,9 @@ class InformacionCliente(models.Model):
         pass
         # return informacion == self.datoAValidar
 
-    def esValidacion(self, validacion_a_comparar: Validacion):
-        # Compara la instancia actual de validacion con el parámetro proporcionado
-        return self.validacion.getNombre() == validacion_a_comparar.getNombre()
+    # def esValidacion(self, validacion_a_comparar: Validacion):
+    #     # Compara la instancia actual de validacion con el parámetro proporcionado
+    #     return self.validacion.getNombre() == validacion_a_comparar.getNombre()
 
     def getDatoAValidar(self):
         return str(self.datoAValidar)

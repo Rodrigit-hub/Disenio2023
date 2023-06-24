@@ -1,37 +1,63 @@
-from urllib.parse import urlencode
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
+from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse
 from .controller import GestorRtaOperador
-from .models import Llamada, Estado, Cliente, SubOpcionLlamada
+from .models import Llamada, Estado, Cliente, SubOpcionLlamada, CategoriaLlamada, OpcionLlamada, TipoInformacion, Validacion
+from .forms import ValidacionForm
 
-# Create your views here.
+#     Consultas de saldo: Permite a los usuarios verificar el saldo actual de su tarjeta de crédito.
+
+# Pagos: Proporciona opciones para realizar pagos de la tarjeta de crédito, ya sea mediante transferencias bancarias, pagos en línea u otros métodos disponibles.
+
+# Historial de transacciones: Permite a los usuarios acceder al historial de transacciones realizadas con la tarjeta de crédito, incluyendo detalles como la fecha, el monto y la descripción de cada transacción.
+
+# Bloqueo y desbloqueo de la tarjeta: Permite a los usuarios bloquear o desbloquear temporalmente su tarjeta de crédito en caso de pérdida, robo o sospecha de uso no autorizado.
+
+# Solicitud de aumento de límite de crédito: Permite a los usuarios solicitar un aumento en el límite de crédito de su tarjeta.
+
+# Cambio de PIN: Permite a los usuarios cambiar el número de identificación personal (PIN) asociado a su tarjeta de crédito.
+
+# Atención al cliente: Proporciona opciones para comunicarse con un representante de servicio al cliente en caso de consultas, problemas o asistencia adicional.
 
 
+# Esta es la ruta raíz a la cual vamos a pasar la llamada
+# para ser procesada por el operador
+# SE ENCARGA DE QUE EXISTA UNA LLAMADA ANTES DE INSTANCIAR EL GESTOR
 def index(request):
-    llamada = Llamada.objects.first()
-    context = {
-        'llamada': llamada,
-    }
-    print(llamada.getNombreCliente())
-    return render(request, 'app_operador/base.html', context)
-
-
-def gestor(request):
-
+    # En caso de que no haya ningún cliente cargado en la base de datos
+    # Instanciamos uno y lo guardamos
     if not Cliente.objects.exists():
-        cliente = Cliente(dni='123456789', nombre='John Doe',
-                          nroCelular='1234567890')
+        cliente = Cliente(
+            dni='123456789',
+            nombre='John Doe',
+            nroCelular='1234567890'
+        )
         cliente.save()
     else:
+        # En caso de que haya cliente cargado
+        # Traemos el primero
         cliente = Cliente.objects.first()
 
-    if not SubOpcionLlamada.objects.exists():
-        sub_opcion = SubOpcionLlamada(nombre='SubOpcion1', nroOrden=1)
-        sub_opcion.save()
-    else:
-        sub_opcion = SubOpcionLlamada.objects.first()
+    # En caso de que no haya ninguna sub opción cargada en la base de datos
+    # Instanciamos una y la guardamos
+    # Atención al cliente
+    # Bloqueo y desbloqueo de tarjeta
+    # Historial de transacciones
 
+    # Categoría
+    # Informar un robo
+
+    # OPCIONES
+    # Informar un robo y solicitar una nueva tarjeta (1)
+    # Informar un robo y anular la tarjeta (2)
+
+    # SUBOPCIONES
+    # Si cuenta con los datos de la tarjeta (1)
+    # Si no cuenta con los datos de la tarjeta (2)
+    # Si deasea comunicarse con un responsable de atención al cliente
+    # Finalizar llamada
+
+    # En caso de que no estén los estados cargados
+    # Los instanciamos a todos y los guardamos
     if not Estado.objects.exists():
         estado_iniciada = Estado(nombre='iniciada')
         estado_iniciada.save()
@@ -42,53 +68,119 @@ def gestor(request):
         estado_finalizada = Estado(nombre='finalizada')
         estado_finalizada.save()
 
+    # En caso de que no haya llamada en la bd
+    # Instanciamos una, pasándole cliente, subOpcion y estadoActual, y la guardamos
     if not Llamada.objects.exists():
-        estado_actual = Estado.objects.first()
-        llamada_actual = Llamada(
-            cliente=cliente, subOpcion=sub_opcion, estadoActual=estado_actual)
-        llamada_actual.save()
+        estadoActual = Estado.objects.first()
+        llamadaActual = Llamada(
+            cliente=cliente,
+            estadoActual=estadoActual,
+        )
+        llamadaActual.save()
     else:
-        llamada_actual = Llamada.objects.first()
-    # Continuar con el código existente ...
-    # llamada_actual = Llamada.objects.filter(id=2).first()
+        # En caso de que haya alguna llamada
+        # Traemos la primera
+        llamadaActual = Llamada.objects.first()
 
-    print(cliente)
-    print(sub_opcion)
-    print(llamada_actual)
+    if not CategoriaLlamada.objects.exists():
+        categoríaSeleccionada = CategoriaLlamada(
+            audioMensajeOpciones='Informar un robo y solicitar una nueva tarjeta (1) - Informar un robo y anular la tarjeta (2)',
+            mensajeOpciones='',
+            nroOrden=1,
+            nombre='Informar un robo',
+            llamada=llamadaActual,
 
-    # Inicializo el gestor con una llamada aleatoria
-    gestor = GestorRtaOperador(llamada_actual)
+        )
+        categoríaSeleccionada.save()
+    else:
+        # En caso de que haya sub opción cargada
+        # Traemos la primera
+        categoríaSeleccionada = CategoriaLlamada.objects.first()
 
-    #
-    gestor.recibirLlamada()
-    # llamadaEnCurso = gestor.getLlamadaEnCurso()
+    if not OpcionLlamada.objects.exists():
+        opcionSeleccionada = OpcionLlamada(
+            audioMensajeSubOpciones='Si cuenta con los datos de la tarjeta (1) - Si no cuenta con los datos de la tarjeta (2) - Si deasea comunicarse con un responsable de atención al cliente- Finalizar llamada',
+            mensajeSubOpciones='',
+            nroOrden=1,
+            nombre='Informar un robo y solicitar una nueva tarjeta',
+            llamada=llamadaActual,
+            categoria=categoríaSeleccionada
+        )
+        opcionSeleccionada.save()
+    else:
+        # En caso de que haya sub opción cargada
+        # Traemos la primera
+        opcionSeleccionada = OpcionLlamada.objects.first()
 
-    # print(fechaHoraActual)
-    # gestor.recibirLlamada()
-    # print(llamadaEnCurso)
-    return HttpResponse(f'Hello')
+    if not SubOpcionLlamada.objects.exists():
+        subOpcionSeleccionada = SubOpcionLlamada(
+            nroOrden=1,
+            llamada=llamadaActual,
+            nombre='Si cuenta con los datos de la tarjeta',
+            opcion=opcionSeleccionada
+        )
+        subOpcionSeleccionada.save()
+    else:
+        # En caso de que haya sub opción cargada
+        # Traemos la primera
+        subOpcionSeleccionada = SubOpcionLlamada.objects.first()
+
+    if not Validacion.objects.exists():
+        validacion = Validacion(
+            audioMensajeValidacion='',
+            nombre='Fecha de naciemiento',
+            subOpcion=subOpcionSeleccionada
+        )
+        validacion.save()
+    else:
+        # En caso de que haya sub opción cargada
+        # Traemos la primera
+        validacion = Validacion.objects.first()
+
+    if not TipoInformacion.objects.exists():
+        tipoInfomacion = TipoInformacion(
+            datoAValidar='11/09/2000',
+            validacion=validacion,
+            cliente=cliente,
+        )
+        tipoInfomacion.save()
+    else:
+        # En caso de que haya sub opción cargada
+        # Traemos la primera
+        tipoInfomacion = TipoInformacion.objects.first()
+
+    # Inicializo el gestor con la llamada obtenida en el proceso de arriba
+    gestor = GestorRtaOperador()
+
+    # Ya instanciado el gestor, debería comenzar el CU
+    # Probablemente haya que pasarle más cosas en un futuro
+    gestor.recibirLlamada(llamadaActual)
+    # datosLlamada = gestor.obtenerDatosLlamada()
+    validaciones = gestor.buscarValidaciones()
+    gestor.finalizarLlamada()
+
+    # Context creado para enviar los datos al html para poder ser visualizados por el operador
+    context = {
+        'llamada': llamadaActual,
+        'cliente': cliente,
+        'categoria': categoríaSeleccionada,
+        'opcion': opcionSeleccionada,
+        'subOpcion': subOpcionSeleccionada,
+        'validaciones': validaciones
+    }
+
+    # Esta ruta es / (esto se configura en el archivo urls.py)
+    # Va a renderizar el html dentro de templates
+    # Le pasamos el contexto para que pueda ver la información
+    return render(request, 'app_operador/base.html', context)
 
 
 def verificar_validacion(request: HttpRequest):
-    if request.method == 'POST':
-        id_llamada = request.POST.get('id_llamada')
-        nombre_cliente = request.POST.get('nombre_cliente')
-        estado_llamada = request.POST.get('estado_llamada')
+    validacion = None
+    if request.method == "POST":
+        formulario_contacto = ValidacionForm(data=request.POST)
+        print(formulario_contacto.is_valid())
+        if formulario_contacto.is_valid():
+            validacion = request.POST.get("validacion")
 
-        params = {
-            'id_llamada': id_llamada,
-            'nombre_cliente': nombre_cliente,
-            'estado_llamada': estado_llamada,
-        }
-
-        url = reverse('segundo_form')
-        url_with_params = f'{url}?{urlencode(params)}'
-
-        return redirect(url_with_params)
-    else:
-        return HttpResponseNotAllowed(['POST'])
-
-
-def segundo_form(request: HttpRequest):
-    id_llamada = request.GET.get('id_llamada')
-    return HttpResponse(f'<h1>El id llamada es {id_llamada}</h1>')
+    return HttpResponse(f'<h1>{validacion}</h1>')

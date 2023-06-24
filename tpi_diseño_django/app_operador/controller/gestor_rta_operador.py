@@ -1,6 +1,6 @@
 # controller/gestor_rta_operador.py
-from datetime import datetime
-from ..models import Estado, Llamada, CategoriaLlamada
+from ..models import Estado, Llamada, CategoriaLlamada, OpcionLlamada, SubOpcionLlamada, Validacion
+from django.utils import timezone
 # Accion?
 
 # Métodos relacionados con CambioEstado
@@ -13,15 +13,25 @@ class GestorRtaOperador:
         'apellido': 'Test'
     }
 
-    def __init__(self, llamada) -> None:
-        self.setLlamadaEnCurso(llamada)
-
     def nuevaRespuestaOperador(self):
         self.recibirLlamada()
 
-    def recibirLlamada(self):
+    def recibirLlamada(self, llamada):
+        self.setLlamadaEnCurso(llamada)
+        fechaHoraActual = self.obtenerFechaHoraActual()
+        print(fechaHoraActual)
         estadoEnCurso = self.buscarEstadoEnCurso()
-        self.llamadaEnCurso.tomadaPorOperador(self.operador, estadoEnCurso)
+        self.llamadaEnCurso.tomadaPorOperador(
+            self.operador, fechaHoraActual, estadoEnCurso)
+
+    def obtenerDatosLlamada(self):
+        cliente = self.llamadaEnCurso.cliente.getNombre()
+        return cliente
+
+    def finalizarLlamada(self):
+        fechaHoraActual = self.obtenerFechaHoraActual()
+        estadoFinalizada = self.buscarEstadoFinalizada()
+        self.llamadaEnCurso.finalizarLlamada(fechaHoraActual, estadoFinalizada)
 
     def buscarEstadoEnCurso(self):
         estados = Estado.objects.all()
@@ -29,14 +39,14 @@ class GestorRtaOperador:
             (estado for estado in estados if estado.esEnCurso()), None)
         return estadoEnCurso
 
-    # def buscarEstadoIniciada(self):
-    #     estados = Estado.objects.all()
-    #     estadoIniciada = list(
-    #         filter(lambda estado: estado.esEnIniciada(), estados))[0]
-    #     return estadoIniciada
+    def buscarEstadoFinalizada(self):
+        estados = Estado.objects.all()
+        estadoFinalizada = next(
+            (estado for estado in estados if estado.esFinalizada()), None)
+        return estadoFinalizada
 
     def obtenerFechaHoraActual(self):
-        fechaHoraActual = datetime.now()
+        fechaHoraActual = timezone.now()
         return fechaHoraActual
 
     def getLlamadaEnCurso(self) -> Llamada:
@@ -47,3 +57,11 @@ class GestorRtaOperador:
 
     def buscarDatosLlamada(self):
         pass
+
+    def buscarValidaciones(self):
+        categoria = CategoriaLlamada.objects.filter(
+            llamada=self.llamadaEnCurso)[0]
+        opcion = OpcionLlamada.objects.filter(categoria=categoria)[0]
+        subopcion = SubOpcionLlamada.objects.filter(opcion=opcion)[0]
+        validacion = Validacion.objects.filter(subOpcion=subopcion)[0]
+        return validacion

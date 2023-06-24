@@ -1,20 +1,30 @@
 from django.db import models
-from .opcion_llamada import OpcionLlamada
+from .llamada import Llamada
 
 
 class CategoriaLlamada(models.Model):
-    audioMensajeSubopciones = models.CharField(max_length=255, default='')
-    mensajeSubopciones = models.TextField(null=True)
+    audioMensajeOpciones = models.CharField(max_length=255, default='')
+    mensajeOpciones = models.TextField(null=True)
     nroOrden = models.IntegerField(default=0)
     nombre = models.CharField(max_length=255, default='')
     # Relaciones con otros modelos
-    opciones = models.ManyToManyField(OpcionLlamada)
+    # opciones = models.ManyToManyField(OpcionLlamada)
+
+    # La llamada necesita conocer Categoría, Opción y SubOpción marcadas por el cliente
+    llamada = models.ForeignKey(
+        Llamada,
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     def __str__(self):
         return self.getNombre()
 
     def getNombre(self):
         return str(self.nombre)
+
+    def buscarValidaciones(self):
+        pass
 
     def setNombre(self, nuevoNombre):
         self.nombre = nuevoNombre

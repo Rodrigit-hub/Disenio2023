@@ -1,8 +1,12 @@
 from django.db import models
+from .validacion import Validacion
+from .cliente import Cliente
 
 
 class TipoInformacion(models.Model):
-    descripcion = models.CharField(max_length=255, default="")
+    datoAValidar = models.CharField(max_length=255, default="")
+    validacion = models.ForeignKey(Validacion, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.getDescripcion()

@@ -1,9 +1,18 @@
 from django.db import models
+from .llamada import Llamada
+from .opcion_llamada import OpcionLlamada
+# from .validacion import Validacion
 
 
 class SubOpcionLlamada(models.Model):
     nombre = models.CharField(max_length=255, default='')
     nroOrden = models.IntegerField(default=0)
+    opcion = models.ForeignKey(OpcionLlamada, on_delete=models.CASCADE)
+    llamada = models.ForeignKey(
+        Llamada,
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     def __str__(self) -> str:
         return self.nombre

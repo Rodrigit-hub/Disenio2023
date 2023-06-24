@@ -1,16 +1,17 @@
 from django.utils import timezone
 from django.db import models
 from .estado import Estado
+from .llamada import Llamada
 
 
 class CambioEstado(models.Model):
-    fechaHoraInicio = models.DateTimeField(default=timezone.now)
-    fechaHoraFin = models.DateTimeField(null=True)
+    fechaHoraCambio = models.DateTimeField(default=timezone.now)
+    # fechaHoraFin = models.DateTimeField(null=True)
     estado = models.ForeignKey(
         Estado,
         on_delete=models.CASCADE
     )
-    llamada = None
+    llamada = models.ForeignKey(Llamada, on_delete=models.CASCADE)
 
     # def new(self, estado, llamada):
     #     self.setEstado(estado)
@@ -20,13 +21,10 @@ class CambioEstado(models.Model):
 
     # def __init__(self, llamada=None, estado=None, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
-    #     if llamada is not None:
-    #         self.llamada = llamada
-    #     if estado is not None:
-    #         self.estado = estado
+    #     pass
 
     def __str__(self):
-        return f'{self.estado.getNombre()} - {self.getFechaHoraInicio()}'
+        return f'{self.estado.getNombre()} - {self.getFechaHoraCambio()}'
 
     def setEstado(self, nuevoEstado):
         self.estado = nuevoEstado
@@ -38,8 +36,8 @@ class CambioEstado(models.Model):
     def esUltimoEstado(self):
         return self.estado.esFinalizada()
 
-    def getFechaHoraInicio(self):
-        return str(self.fechaHoraInicio)
+    def getFechaHoraCambio(self):
+        return str(self.fechaHoraCambio)
 
     def getNombreEstado(self):
         return self.estado.getNombre()

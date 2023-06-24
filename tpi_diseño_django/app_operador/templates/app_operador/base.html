@@ -20,11 +20,7 @@
         <h4>Operador: <span></span></h4>
       </header>
       <div class="form-container">
-        <form
-          id="form_verificar_validacion"
-          action="verificar_validacion"
-          class="form"
-          method="post">
+        <form id="form_verificar_validacion" class="form" method="post">
           {% csrf_token %}
           <div class="form-group">
             <label for="id_llamada">
@@ -33,7 +29,7 @@
                 type="text"
                 id="id_llamada"
                 name="id_llamada"
-                value="123" />
+                value="{{llamada.id}}" />
             </label>
           </div>
           <div class="form-group">
@@ -60,7 +56,8 @@
               <input
                 type="text"
                 id="categoria_seleccionada"
-                name="categoria_seleccionada" />
+                name="categoria_seleccionada"
+                value="{{categoria}}" />
             </label>
           </div>
           <div class="form-group">
@@ -69,37 +66,31 @@
               <input
                 type="text"
                 id="opcion_seleccionada"
-                name="opcion_seleccionada" />
+                name="opcion_seleccionada"
+                value="{{opcion}}" />
             </label>
           </div>
           <div class="form-group">
             <label>
               Sub Opción 1 seleccionada:
-              <input type="text" class="opcion-seleccionada" />
-            </label>
-            <label>
-              Sub Opción 2 seleccionada:
-              <input type="text" class="opcion-seleccionada" />
+              <input
+                type="text"
+                class="opcion-seleccionada"
+                value="{{subOpcion}}" />
             </label>
           </div>
           <div class="form-group">
             <label>
-              Validación 1:
+              {{validaciones}}
               <input
-                type="text"
-                class="validacion-seleccionada"
-                placeholder="Ingresar respuesta" />
-            </label>
-            <label>
-              Validación 2:
-              <input
+                id="validacion"
                 type="text"
                 class="validacion-seleccionada"
                 placeholder="Ingresar respuesta" />
             </label>
           </div>
           <div class="form-group">
-            <button type="submit">Verificar</button>
+            <button id="button-submit" type="submit">Verificar</button>
           </div>
         </form>
       </div>

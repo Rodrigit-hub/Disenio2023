@@ -1,6 +1,5 @@
 from django.db import models
-from .tipo_informacion import TipoInformacion
-from .opcion_validacion import OpcionValidacion
+from .sub_opcion_llamada import SubOpcionLlamada
 
 
 class Validacion(models.Model):
@@ -8,11 +7,14 @@ class Validacion(models.Model):
     # audioMensajeValidacion = models.FileField(upload_to='audio_mensajes_validacion/')
     audioMensajeValidacion = models.CharField(max_length=255, null=True)
     nombre = models.CharField(max_length=100, null=True)
-
+    subOpcion = models.ForeignKey(
+        SubOpcionLlamada,
+        on_delete=models.CASCADE
+    )
     # Foreign Key
-    tipo = models.ForeignKey(TipoInformacion, on_delete=models.CASCADE)
+    # tipo = models.ForeignKey(TipoInformacion, on_delete=models.CASCADE)
 
-    opcionesValidacion = models.ManyToManyField(OpcionValidacion)
+    # opcionesValidacion = models.ManyToManyField(OpcionValidacion)
 
     def __str__(self):
         return self.getNombre()

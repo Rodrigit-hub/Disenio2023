@@ -1,8 +1,6 @@
 from django.db import models
 from .cliente import Cliente
 from .estado import Estado
-from .cambio_estado import CambioEstado
-from .sub_opcion_llamada import SubOpcionLlamada
 
 
 class Llamada(models.Model):
@@ -11,18 +9,12 @@ class Llamada(models.Model):
     duracion = models.IntegerField(default=0)
     encuestaEnviada = models.BooleanField(null=True)
     observacionAuditor = models.TextField(null=True)
+    operador = None
 
     # Foreign Keys
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    subOpcion = models.ForeignKey(
-        SubOpcionLlamada,
-        on_delete=models.CASCADE,
-        null=True
-    )
     estadoActual = models.ForeignKey(Estado, on_delete=models.CASCADE)
-
-    # VER ESTO
-    cambiosEstado = models.ManyToManyField(CambioEstado)
+    # cambiosEstado = models.ManyToManyField(CambioEstado)
 
     def __str__(self) -> str:
         return f'{self.cliente.getNombre()} - {self.estadoActual.getNombre()}'
@@ -30,13 +22,29 @@ class Llamada(models.Model):
     def calcularDuracion(self):
         pass
 
-    def tomadaPorOperador(self, operador, estadoEnCurso):
-        # cambio_estado = CambioEstado(estadoEnCurso)
-        # cambio_estado.save()
-        # self.cambiosEstado.add(cambio_estado)
-        cambioEstado = CambioEstado.objects.create(
-            llamada=self, estado=estadoEnCurso)
-        self.cambiosEstado.add(cambioEstado)
+    def tomadaPorOperador(self, operador, fechaHoraActual, estadoEnCurso):
+        self.estadoActual = estadoEnCurso
+        self.operador = operador
+        from .cambio_estado import CambioEstado
+        CambioEstado.objects.create(
+            llamada=self,
+            estado=estadoEnCurso,
+            fechaHoraCambio=fechaHoraActual
+        )
+        self.save()
+        # self.cambiosEstado.add(cambioEstado)
+
+    def finalizarLlamada(self, fechaHoraActual, estadoFinalizada):
+        print(estadoFinalizada)
+        self.estadoActual = estadoFinalizada
+        from .cambio_estado import CambioEstado
+        CambioEstado.objects.create(
+            llamada=self,
+            estado=estadoFinalizada,
+            fechaHoraCambio=fechaHoraActual
+        )
+        self.save()
+        # self.cambiosEstado.add(cambioEstado)
 
     def esDePeriodo(self, fecha_inicio, fecha_fin):
         # Lógica para verificar si la llamada pertenece a un periodo específico
@@ -61,10 +69,6 @@ class Llamada(models.Model):
 
     def setDescripcionOperador(self, descripcion):
         self.descripcionOperador = descripcion
-        self.save()
-
-    def setEstadoActual(self, nuevo_estado):
-        self.estadoActual = nuevo_estado
         self.save()
 
     class Meta:
