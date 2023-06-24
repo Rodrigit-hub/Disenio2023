@@ -1,5 +1,4 @@
 from django.db import models
-
 from .llamada import Llamada
 from .categoria_llamada import CategoriaLlamada
 

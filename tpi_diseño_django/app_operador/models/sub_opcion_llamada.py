@@ -1,7 +1,6 @@
 from django.db import models
 from .llamada import Llamada
 from .opcion_llamada import OpcionLlamada
-# from .validacion import Validacion
 
 
 class SubOpcionLlamada(models.Model):

@@ -1,18 +1,12 @@
 from django.db import models
-# from .validacion import Validacion
-from .tipo_informacion import TipoInformacion
-# from .opcion_validacion import OpcionValidacion
+from .validacion import Validacion
+from .cliente import Cliente
 
 
 class InformacionCliente(models.Model):
     datoAValidar = models.CharField(max_length=255, null=True)
-
-    # # FOREIGN KEYS
-    # tipoInformacion = models.ForeignKey(TipoInformacion, on_delete=models.CASCADE)
-    # validacion = models.ForeignKey(Validacion, on_delete=models.CASCADE)
-
-    # # RELACION MUCHOS A MUCHOS
-    # opcionesValidacion = models.ManyToManyField(OpcionValidacion)
+    validacion = models.ForeignKey(Validacion, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.getDatoAValidar()}'

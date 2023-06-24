@@ -7,7 +7,7 @@ class Validacion(models.Model):
     # audioMensajeValidacion = models.FileField(upload_to='audio_mensajes_validacion/')
     audioMensajeValidacion = models.CharField(max_length=255, null=True)
     nombre = models.CharField(max_length=100, null=True)
-    subOpcion = models.ForeignKey(
+    subOpcion = models.OneToOneField(
         SubOpcionLlamada,
         on_delete=models.CASCADE
     )

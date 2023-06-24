@@ -35,7 +35,6 @@ class Llamada(models.Model):
         # self.cambiosEstado.add(cambioEstado)
 
     def finalizarLlamada(self, fechaHoraActual, estadoFinalizada):
-        print(estadoFinalizada)
         self.estadoActual = estadoFinalizada
         from .cambio_estado import CambioEstado
         CambioEstado.objects.create(
@@ -43,8 +42,8 @@ class Llamada(models.Model):
             estado=estadoFinalizada,
             fechaHoraCambio=fechaHoraActual
         )
+        self.estadoActual = estadoFinalizada
         self.save()
-        # self.cambiosEstado.add(cambioEstado)
 
     def esDePeriodo(self, fecha_inicio, fecha_fin):
         # Lógica para verificar si la llamada pertenece a un periodo específico

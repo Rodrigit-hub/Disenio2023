@@ -20,7 +20,11 @@
         <h4>Operador: <span></span></h4>
       </header>
       <div class="form-container">
-        <form id="form_verificar_validacion" class="form" method="post">
+        <form
+          id="form_verificar_validacion"
+          action="verificar_validacion"
+          class="form"
+          method="post">
           {% csrf_token %}
           <div class="form-group">
             <label for="id_llamada">
@@ -74,16 +78,17 @@
             <label>
               Sub Opción 1 seleccionada:
               <input
+                id="sub_opcion_seleccionada"
                 type="text"
                 class="opcion-seleccionada"
                 value="{{subOpcion}}" />
             </label>
           </div>
           <div class="form-group">
-            <label>
+            <label id="validacion_name">
               {{validaciones}}
               <input
-                id="validacion"
+                id="validacion_data"
                 type="text"
                 class="validacion-seleccionada"
                 placeholder="Ingresar respuesta" />

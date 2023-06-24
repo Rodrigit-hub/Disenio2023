@@ -1,5 +1,5 @@
 # controller/gestor_rta_operador.py
-from ..models import Estado, Llamada, CategoriaLlamada, OpcionLlamada, SubOpcionLlamada, Validacion
+from ..models import Estado, Llamada, CategoriaLlamada, OpcionLlamada, SubOpcionLlamada, Validacion, Cliente
 from django.utils import timezone
 # Accion?
 
@@ -19,7 +19,6 @@ class GestorRtaOperador:
     def recibirLlamada(self, llamada):
         self.setLlamadaEnCurso(llamada)
         fechaHoraActual = self.obtenerFechaHoraActual()
-        print(fechaHoraActual)
         estadoEnCurso = self.buscarEstadoEnCurso()
         self.llamadaEnCurso.tomadaPorOperador(
             self.operador, fechaHoraActual, estadoEnCurso)
@@ -65,3 +64,11 @@ class GestorRtaOperador:
         subopcion = SubOpcionLlamada.objects.filter(opcion=opcion)[0]
         validacion = Validacion.objects.filter(subOpcion=subopcion)[0]
         return validacion
+
+    def validarInformacionCliente(self, id_llamada, validacion, validacion_data):
+        cliente = Cliente.objects.get(id=id_llamada)
+        esInformacionCorrecta = cliente.esInformacionCorrecta(
+            validacion=validacion,
+            validacion_data=validacion_data
+        )
+        print(esInformacionCorrecta)

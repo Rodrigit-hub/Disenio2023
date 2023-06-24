@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CategoriaLlamada, Cliente, CambioEstado, Estado, InformacionCliente, Llamada, OpcionLlamada, SubOpcionLlamada, TipoInformacion, Validacion
+from .models import CategoriaLlamada, Cliente, CambioEstado, Estado, InformacionCliente, Llamada, OpcionLlamada, SubOpcionLlamada, Validacion
 
 # Register your models here.
 admin.site.register(Cliente)
@@ -12,4 +12,4 @@ admin.site.register(SubOpcionLlamada)
 admin.site.register(CambioEstado)
 admin.site.register(Llamada)
 # admin.site.register(OpcionValidacion)
-admin.site.register(TipoInformacion)
+# admin.site.register(TipoInformacion)

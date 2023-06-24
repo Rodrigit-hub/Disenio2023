@@ -7,5 +7,5 @@ from .llamada import Llamada
 from .opcion_llamada import OpcionLlamada
 from .sub_opcion_llamada import SubOpcionLlamada
 from .validacion import Validacion
-from .tipo_informacion import TipoInformacion
+# from .tipo_informacion import TipoInformacion
 # from .opcion_validacion import OpcionValidacion

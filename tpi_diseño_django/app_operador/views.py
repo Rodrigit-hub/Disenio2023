@@ -1,8 +1,9 @@
+import json
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from .controller import GestorRtaOperador
-from .models import Llamada, Estado, Cliente, SubOpcionLlamada, CategoriaLlamada, OpcionLlamada, TipoInformacion, Validacion
-from .forms import ValidacionForm
+from .models import Llamada, Estado, Cliente, SubOpcionLlamada, CategoriaLlamada, OpcionLlamada, InformacionCliente, Validacion
+# from .forms import VerificarValidacionForm
 
 #     Consultas de saldo: Permite a los usuarios verificar el saldo actual de su tarjeta de crédito.
 
@@ -22,6 +23,11 @@ from .forms import ValidacionForm
 # Esta es la ruta raíz a la cual vamos a pasar la llamada
 # para ser procesada por el operador
 # SE ENCARGA DE QUE EXISTA UNA LLAMADA ANTES DE INSTANCIAR EL GESTOR
+
+# Inicializo el gestor con la llamada obtenida en el proceso de arriba
+gestor = GestorRtaOperador()
+
+
 def index(request):
     # En caso de que no haya ningún cliente cargado en la base de datos
     # Instanciamos uno y lo guardamos
@@ -137,8 +143,8 @@ def index(request):
         # Traemos la primera
         validacion = Validacion.objects.first()
 
-    if not TipoInformacion.objects.exists():
-        tipoInfomacion = TipoInformacion(
+    if not InformacionCliente.objects.exists():
+        tipoInfomacion = InformacionCliente(
             datoAValidar='11/09/2000',
             validacion=validacion,
             cliente=cliente,
@@ -147,10 +153,7 @@ def index(request):
     else:
         # En caso de que haya sub opción cargada
         # Traemos la primera
-        tipoInfomacion = TipoInformacion.objects.first()
-
-    # Inicializo el gestor con la llamada obtenida en el proceso de arriba
-    gestor = GestorRtaOperador()
+        tipoInfomacion = InformacionCliente.objects.first()
 
     # Ya instanciado el gestor, debería comenzar el CU
     # Probablemente haya que pasarle más cosas en un futuro
@@ -169,18 +172,26 @@ def index(request):
         'validaciones': validaciones
     }
 
-    # Esta ruta es / (esto se configura en el archivo urls.py)
-    # Va a renderizar el html dentro de templates
-    # Le pasamos el contexto para que pueda ver la información
     return render(request, 'app_operador/base.html', context)
 
 
 def verificar_validacion(request: HttpRequest):
-    validacion = None
-    if request.method == "POST":
-        formulario_contacto = ValidacionForm(data=request.POST)
-        print(formulario_contacto.is_valid())
-        if formulario_contacto.is_valid():
-            validacion = request.POST.get("validacion")
+    data = json.loads(request.body)
+    id_llamada = data.get('idLlamada')
+    validacion = data.get('validacion')
+    validacion_data = data.get('validacionData')
 
-    return HttpResponse(f'<h1>{validacion}</h1>')
+    gestor.validarInformacionCliente(
+        id_llamada=id_llamada,
+        validacion=validacion,
+        validacion_data=validacion_data
+    )
+
+    # validacion = None
+    # if request.method == "POST":
+    #     formulario_validacion = VerificarValidacionForm(data=request.POST)
+    #     print(formulario_validacion.is_valid())
+    #     if formulario_validacion.is_valid():
+    #         validacion = formulario_validacion.['validacion']
+
+    return HttpResponse("hello")

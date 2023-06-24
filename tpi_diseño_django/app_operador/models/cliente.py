@@ -29,5 +29,18 @@ class Cliente(models.Model):
         # Almacena el cambio en la base de datos
         self.save()
 
+    def esInformacionCorrecta(self, validacion, validacion_data):
+        from .informacion_cliente import InformacionCliente
+        info_cliente = InformacionCliente.objects.get(cliente=self)
+        validacionDeCliente = info_cliente.validacion.getNombre()
+        if validacion == validacionDeCliente:
+            datoAValidar = info_cliente.datoAValidar
+            # print(datoAValidar)
+            if validacion_data == datoAValidar:
+                return True
+        return False
+
+        # info_cliente = Validacion.objects.get(cliente=self)
+
     class Meta:
         db_table = 'cliente'
