@@ -1,5 +1,5 @@
 # controller/gestor_rta_operador.py
-from ..models import Estado, Llamada, CategoriaLlamada, OpcionLlamada, SubOpcionLlamada, Validacion, Cliente
+from ..models import Estado, Llamada, CategoriaLlamada, Validacion, Cliente
 from django.utils import timezone
 # Accion?
 
@@ -21,7 +21,10 @@ class GestorRtaOperador:
         fechaHoraActual = self.obtenerFechaHoraActual()
         estadoEnCurso = self.buscarEstadoEnCurso()
         self.llamadaEnCurso.tomadaPorOperador(
-            self.operador, fechaHoraActual, estadoEnCurso)
+            self.operador,
+            fechaHoraActual,
+            estadoEnCurso
+        )
 
     def obtenerDatosLlamada(self):
         cliente = self.llamadaEnCurso.cliente.getNombre()
@@ -54,19 +57,20 @@ class GestorRtaOperador:
     def setLlamadaEnCurso(self, llamada):
         self.llamadaEnCurso = llamada
 
-    def buscarDatosLlamada(self):
-        pass
-
-    def buscarValidaciones(self):
+    def obtenerDatosLlamada(self):
+        nombreCliente = self.llamadaEnCurso.getNombreClienteLlamada()
         categoria = CategoriaLlamada.objects.filter(
-            llamada=self.llamadaEnCurso)[0]
-        opcion = OpcionLlamada.objects.filter(categoria=categoria)[0]
-        subopcion = SubOpcionLlamada.objects.filter(opcion=opcion)[0]
+            llamada=self.llamadaEnCurso
+        )[0]
+        opcion, subopcion = categoria.getDescripcionCompletaCategoriaYOpcion()
+        return (nombreCliente, categoria, opcion, subopcion)
+
+    def buscarValidaciones(self, subopcion):
         validacion = Validacion.objects.filter(subOpcion=subopcion)[0]
         return validacion
 
     def validarInformacionCliente(self, id_llamada, validacion, validacion_data):
-        cliente = Cliente.objects.get(id=id_llamada)
+        cliente = Cliente.objects.filter(llamada=id_llamada)[0]
         esInformacionCorrecta = cliente.esInformacionCorrecta(
             validacion=validacion,
             validacion_data=validacion_data

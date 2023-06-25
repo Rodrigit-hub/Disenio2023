@@ -97,10 +97,10 @@ def index(request):
         )
         categoriaSeleccionada.save()
         categoriaSeleccionada.llamada.set([llamadaActual])
-    else:
-        # En caso de que haya sub opción cargada
-        # Traemos la primera
-        categoriaSeleccionada = CategoriaLlamada.objects.first()
+    # else:
+    #     # En caso de que haya sub opción cargada
+    #     # Traemos la primera
+    #     categoriaSeleccionada = CategoriaLlamada.objects.first()
 
     if not OpcionLlamada.objects.exists():
         opcionSeleccionada = OpcionLlamada(
@@ -112,10 +112,10 @@ def index(request):
         )
         opcionSeleccionada.save()
         opcionSeleccionada.llamada.set([llamadaActual])
-    else:
-        # En caso de que haya sub opción cargada
-        # Traemos la primera
-        opcionSeleccionada = OpcionLlamada.objects.first()
+    # else:
+    #     # En caso de que haya sub opción cargada
+    #     # Traemos la primera
+    #     opcionSeleccionada = OpcionLlamada.objects.first()
 
     if not SubOpcionLlamada.objects.exists():
         subOpcionSeleccionada = SubOpcionLlamada(
@@ -125,23 +125,22 @@ def index(request):
         )
         subOpcionSeleccionada.save()
         subOpcionSeleccionada.llamada.set([llamadaActual])
-
-    else:
-        # En caso de que haya sub opción cargada
-        # Traemos la primera
-        subOpcionSeleccionada = SubOpcionLlamada.objects.first()
+    # else:
+    #     # En caso de que haya sub opción cargada
+    #     # Traemos la primera
+    #     subOpcionSeleccionada = SubOpcionLlamada.objects.first()
 
     if not Validacion.objects.exists():
         validacion = Validacion(
             audioMensajeValidacion='',
-            nombre='Fecha de naciemiento',
+            nombre='Fecha de nacimiento',
             subOpcion=subOpcionSeleccionada
         )
         validacion.save()
-    else:
-        # En caso de que haya sub opción cargada
-        # Traemos la primera
-        validacion = Validacion.objects.first()
+    # else:
+    #     # En caso de que haya sub opción cargada
+    #     # Traemos la primera
+    #     validacion = Validacion.objects.first()
 
     if not InformacionCliente.objects.exists():
         tipoInfomacion = InformacionCliente(
@@ -150,25 +149,25 @@ def index(request):
             cliente=cliente,
         )
         tipoInfomacion.save()
-    else:
-        # En caso de que haya sub opción cargada
-        # Traemos la primera
-        tipoInfomacion = InformacionCliente.objects.first()
+    # else:
+    #     # En caso de que haya sub opción cargada
+    #     # Traemos la primera
+    #     tipoInfomacion = InformacionCliente.objects.first()
 
     # Ya instanciado el gestor, debería comenzar el CU
     # Probablemente haya que pasarle más cosas en un futuro
     gestor.recibirLlamada(llamadaActual)
-    # datosLlamada = gestor.obtenerDatosLlamada()
-    validaciones = gestor.buscarValidaciones()
-    gestor.finalizarLlamada()
-
+    # cliente, categoria, opcion, subopcion =
+    nombreCliente, categoria, opcion, subOpcion = gestor.obtenerDatosLlamada()
+    validaciones = gestor.buscarValidaciones(subOpcion)
+    # gestor.finalizarLlamada()
     # Context creado para enviar los datos al html para poder ser visualizados por el operador
     context = {
         'llamada': llamadaActual,
-        'cliente': cliente,
-        'categoria': categoriaSeleccionada,
-        'opcion': opcionSeleccionada,
-        'subOpcion': subOpcionSeleccionada,
+        'cliente': nombreCliente,
+        'categoria': categoria,
+        'opcion': opcion,
+        'subOpcion': subOpcion,
         'validaciones': validaciones
     }
 
@@ -186,7 +185,6 @@ def verificar_validacion(request: HttpRequest):
         validacion=validacion,
         validacion_data=validacion_data
     )
-
     if esInformacionValida:
         return JsonResponse({"status": "Validado con éxito"})
     else:

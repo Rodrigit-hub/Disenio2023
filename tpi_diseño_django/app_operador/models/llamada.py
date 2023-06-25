@@ -14,7 +14,6 @@ class Llamada(models.Model):
     # Foreign Keys
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     estadoActual = models.ForeignKey(Estado, on_delete=models.CASCADE)
-    # cambiosEstado = models.ManyToManyField(CambioEstado)
 
     def __str__(self) -> str:
         return f'{self.cliente.getNombre()} - {self.estadoActual.getNombre()}'
@@ -32,7 +31,6 @@ class Llamada(models.Model):
             fechaHoraCambio=fechaHoraActual
         )
         self.save()
-        # self.cambiosEstado.add(cambioEstado)
 
     def finalizarLlamada(self, fechaHoraActual, estadoFinalizada):
         self.estadoActual = estadoFinalizada
@@ -45,9 +43,8 @@ class Llamada(models.Model):
         self.estadoActual = estadoFinalizada
         self.save()
 
-    def esDePeriodo(self, fecha_inicio, fecha_fin):
-        # Lógica para verificar si la llamada pertenece a un periodo específico
-        pass
+    def getNombreClienteLlamada(self):
+        return self.cliente.getNombre()
 
     def getEstadoActual(self):
         return self.estadoActual.getNombre()
@@ -62,9 +59,6 @@ class Llamada(models.Model):
     def setDuracion(self, duracion):
         self.duracion = duracion
         self.save()
-
-    def getNombreCliente(self):
-        return self.cliente.getNombre()
 
     def setDescripcionOperador(self, descripcion):
         self.descripcionOperador = descripcion

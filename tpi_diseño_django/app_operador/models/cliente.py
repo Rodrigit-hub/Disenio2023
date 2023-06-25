@@ -34,12 +34,10 @@ class Cliente(models.Model):
         info_cliente = InformacionCliente.objects.get(cliente=self)
         validacionDeCliente = info_cliente.validacion.getNombre()
         if validacion == validacionDeCliente:
-            datoAValidar = info_cliente.datoAValidar
+            datoAValidar = info_cliente.getDatoAValidar()
             if validacion_data == datoAValidar:
                 return True
         return False
-
-        # info_cliente = Validacion.objects.get(cliente=self)
 
     class Meta:
         db_table = 'cliente'

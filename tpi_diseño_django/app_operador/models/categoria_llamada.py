@@ -46,11 +46,12 @@ class CategoriaLlamada(models.Model):
         self.audioMensajeSubopciones = nuevoAudioMensajeSubopciones
         self.save()
 
-    def getDescripcionConSubOpcion(self):
-        pass
-        # descripcion = f"{self.nombre}: {self.mensajeSubopciones}"
-        # sub_opciones = ", ".join([str(sub_opcion) for sub_opcion in self.sub_opciones.all()])
-        # return f"{descripcion} ({sub_opciones})"
+    def getDescripcionCompletaCategoriaYOpcion(self):
+        from .opcion_llamada import OpcionLlamada
+        from .sub_opcion_llamada import SubOpcionLlamada
+        opcion = OpcionLlamada.objects.filter(categoria=self)[0]
+        subOpcion = SubOpcionLlamada.objects.filter(opcion=opcion)[0]
+        return (opcion, subOpcion)
 
     def getCategoriaOpcionSubOpcion(self):
         pass
