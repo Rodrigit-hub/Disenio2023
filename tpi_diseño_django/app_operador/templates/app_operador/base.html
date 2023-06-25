@@ -9,96 +9,110 @@
       rel="stylesheet"
       type="text/css"
       href="{% static 'css/styles.css' %}" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'images/favicon.ico' %}" />
     <script defer src="{% static 'js/script.js' %}"></script>
-    <title>Página principal</title>
+    <title>Registar respuesta operador</title>
   </head>
 
   <body>
     <main>
       <header>
         <h2>Registro de respuesta por operador</h2>
-        <h4>Operador: <span></span></h4>
+        <h4 class="operador-h4">
+          Operador: <span>{{operador.nombre}} {{operador.apellido}}</span>
+        </h4>
       </header>
-      <div class="form-container">
-        <form
-          id="form_verificar_validacion"
-          action="verificar_validacion"
-          class="form"
-          method="post">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="id_llamada">
-              ID Llamada:
-              <input
-                type="text"
-                id="id_llamada"
-                name="id_llamada"
-                value="{{llamada.id}}" />
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="nombre_cliente">
-              Nombre:
-              <input
-                type="text"
-                id="nombre_cliente"
-                name="nombre_cliente"
-                value="{{cliente}}" />
-            </label>
-            <label for="estado_llamada">
-              Estado:
-              <input
-                type="text"
-                id="estado_llamada"
-                name="estado_llamada"
-                value="{{ llamada.getEstadoActual }}" />
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="categoria_seleccionada">
-              Categoría seleccionada:
-              <input
-                type="text"
-                id="categoria_seleccionada"
-                name="categoria_seleccionada"
-                value="{{categoria}}" />
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="opcion_seleccionada">
-              Opción seleccionada:
-              <input
-                type="text"
-                id="opcion_seleccionada"
-                name="opcion_seleccionada"
-                value="{{opcion}}" />
-            </label>
-          </div>
-          <div class="form-group">
-            <label>
-              Sub Opción 1 seleccionada:
-              <input
-                id="sub_opcion_seleccionada"
-                type="text"
-                class="opcion-seleccionada"
-                value="{{subOpcion}}" />
-            </label>
-          </div>
-          <div class="form-group">
-            <label id="validacion_name">
-              {{validaciones}}
-              <input
-                id="validacion_data"
-                type="text"
-                class="validacion-seleccionada"
-                placeholder="Ingresar respuesta" />
-            </label>
-          </div>
-          <div class="form-group">
-            <button id="button-submit" type="submit">Verificar</button>
-          </div>
-        </form>
-      </div>
+      {% block content %} {% endblock %} {% comment %}
+      <main>
+        <header>
+          <h2>Registro de respuesta por operador</h2>
+          <h4>Operador: <span></span></h4>
+        </header>
+        <div class="form-container">
+          <form
+            id="form_verificar_validacion"
+            action="verificar_validacion"
+            class="form"
+            method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="id_llamada">
+                ID Llamada:
+                <input
+                  type="text"
+                  id="id_llamada"
+                  name="id_llamada"
+                  value="{{llamada.id}}" />
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="nombre_cliente">
+                Nombre:
+                <input
+                  type="text"
+                  id="nombre_cliente"
+                  name="nombre_cliente"
+                  value="{{cliente}}" />
+              </label>
+              <label for="estado_llamada">
+                Estado:
+                <input
+                  type="text"
+                  id="estado_llamada"
+                  name="estado_llamada"
+                  value="{{ llamada.getEstadoActual }}" />
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="categoria_seleccionada">
+                Categoría seleccionada:
+                <input
+                  type="text"
+                  id="categoria_seleccionada"
+                  name="categoria_seleccionada"
+                  value="{{categoria}}" />
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="opcion_seleccionada">
+                Opción seleccionada:
+                <input
+                  type="text"
+                  id="opcion_seleccionada"
+                  name="opcion_seleccionada"
+                  value="{{opcion}}" />
+              </label>
+            </div>
+            <div class="form-group">
+              <label>
+                Sub Opción 1 seleccionada:
+                <input
+                  id="sub_opcion_seleccionada"
+                  type="text"
+                  class="opcion-seleccionada"
+                  value="{{subOpcion}}" />
+              </label>
+            </div>
+            <div class="form-group">
+              <label id="validacion_name">
+                {{validaciones}}
+                <input
+                  id="validacion_data"
+                  type="text"
+                  class="validacion-seleccionada"
+                  placeholder="Ingresar respuesta" />
+              </label>
+            </div>
+            <div class="form-group">
+              <button id="button-submit" type="submit">Verificar</button>
+            </div>
+          </form>
+        </div>
+      </main>
+      {% endcomment %}
     </main>
   </body>
 </html>

@@ -1,11 +1,11 @@
 import json
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, JsonResponse
 from .controller import GestorRtaOperador
 from .models import Llamada, Estado, Cliente, SubOpcionLlamada, CategoriaLlamada, OpcionLlamada, InformacionCliente, Validacion
-# from .forms import VerificarValidacionForm
 
-#     Consultas de saldo: Permite a los usuarios verificar el saldo actual de su tarjeta de crédito.
+
+# Consultas de saldo: Permite a los usuarios verificar el saldo actual de su tarjeta de crédito.
 
 # Pagos: Proporciona opciones para realizar pagos de la tarjeta de crédito, ya sea mediante transferencias bancarias, pagos en línea u otros métodos disponibles.
 
@@ -25,6 +25,7 @@ from .models import Llamada, Estado, Cliente, SubOpcionLlamada, CategoriaLlamada
 # SE ENCARGA DE QUE EXISTA UNA LLAMADA ANTES DE INSTANCIAR EL GESTOR
 
 # Inicializo el gestor con la llamada obtenida en el proceso de arriba
+operador = {'nombre': 'Juan', 'apellido': 'Pérez'}
 gestor = GestorRtaOperador()
 
 
@@ -107,7 +108,7 @@ def index(request):
             audioMensajeSubOpciones='Si cuenta con los datos de la tarjeta (1) - Si no cuenta con los datos de la tarjeta (2) - Si deasea comunicarse con un responsable de atención al cliente- Finalizar llamada',
             mensajeSubOpciones='',
             nroOrden=1,
-            nombre='Informar un robo y solicitar una nueva tarjeta',
+            nombre='Solicitar una nueva tarjeta',
             categoria=categoriaSeleccionada
         )
         opcionSeleccionada.save()
@@ -120,7 +121,7 @@ def index(request):
     if not SubOpcionLlamada.objects.exists():
         subOpcionSeleccionada = SubOpcionLlamada(
             nroOrden=1,
-            nombre='Si cuenta con los datos de la tarjeta',
+            nombre='Cuenta con los datos de la tarjeta',
             opcion=opcionSeleccionada
         )
         subOpcionSeleccionada.save()
@@ -155,15 +156,13 @@ def index(request):
     #     tipoInfomacion = InformacionCliente.objects.first()
 
     # Ya instanciado el gestor, debería comenzar el CU
-    # Probablemente haya que pasarle más cosas en un futuro
     gestor.recibirLlamada(llamadaActual)
-    # cliente, categoria, opcion, subopcion =
     nombreCliente, categoria, opcion, subOpcion = gestor.obtenerDatosLlamada()
     validaciones = gestor.buscarValidaciones(subOpcion)
-    # gestor.finalizarLlamada()
-    # Context creado para enviar los datos al html para poder ser visualizados por el operador
+
     context = {
         'llamada': llamadaActual,
+        'operador': operador,
         'cliente': nombreCliente,
         'categoria': categoria,
         'opcion': opcion,
@@ -171,7 +170,7 @@ def index(request):
         'validaciones': validaciones
     }
 
-    return render(request, 'app_operador/base.html', context)
+    return render(request, 'app_operador/formulario.html', context)
 
 
 def verificar_validacion(request: HttpRequest):
@@ -186,6 +185,31 @@ def verificar_validacion(request: HttpRequest):
         validacion_data=validacion_data
     )
     if esInformacionValida:
-        return JsonResponse({"status": "Validado con éxito"})
+        return JsonResponse({"status": "exito"})
     else:
-        return JsonResponse({"status": "Información inválida"})
+        return JsonResponse({"status": "invalido"})
+
+
+def informacion_valida(request: HttpRequest):
+    context = {"operador": operador}
+    return render(request, "app_operador/confirmacion.html", context)
+
+
+def informacion_invalida(request: HttpRequest):
+    context = {"operador": operador}
+    return render(request, "app_operador/invalida.html", context)
+
+
+def finalizar_validacion(request: HttpRequest):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        descripcionLlamada = data.get('descripcionLlamada')
+
+        gestor.llamadaEnCurso.setDescripcionOperador(descripcionLlamada)
+        gestor.finalizarLlamada()
+        gestor.finCU()
+
+        return JsonResponse({"status": 200, "descripcion": descripcionLlamada})
+    if request.method == 'GET':
+        context = {"operador": operador}
+        return render(request, 'app_operador/finalizada.html', context)

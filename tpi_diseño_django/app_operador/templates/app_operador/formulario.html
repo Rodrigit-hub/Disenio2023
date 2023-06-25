@@ -1,0 +1,79 @@
+{% extends "app_operador/base.html" %} {% block content %}
+<div class="form-container">
+  <form
+    id="form_verificar_validacion"
+    action="verificar_validacion"
+    class="form"
+    method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_llamada">
+        ID Llamada:
+        <input
+          disabled
+          type="text"
+          id="id_llamada"
+          name="id_llamada"
+          value="{{llamada.id}}" />
+      </label>
+    </div>
+    <div class="form-group">
+      <label for="nombre_cliente">
+        Nombre:
+        <input
+          disabled
+          type="text"
+          id="nombre_cliente"
+          name="nombre_cliente"
+          value="{{cliente}}" />
+      </label>
+    </div>
+    <div class="form-group">
+      <label for="categoria_seleccionada">
+        Categoría seleccionada:
+        <input
+          disabled
+          type="text"
+          id="categoria_seleccionada"
+          name="categoria_seleccionada"
+          value="{{categoria}}" />
+      </label>
+    </div>
+    <div class="form-group">
+      <label for="opcion_seleccionada">
+        Opción seleccionada:
+        <input
+          disabled
+          type="text"
+          id="opcion_seleccionada"
+          name="opcion_seleccionada"
+          value="{{opcion}}" />
+      </label>
+    </div>
+    <div class="form-group">
+      <label>
+        Sub Opción seleccionada:
+        <input
+          id="sub_opcion_seleccionada"
+          disabled
+          type="text"
+          class="opcion-seleccionada"
+          value="{{subOpcion}}" />
+      </label>
+    </div>
+    <div class="form-group">
+      <label id="validacion_name">
+        {{validaciones}}
+        <input
+          id="validacion_data"
+          type="text"
+          class="validacion-seleccionada"
+          placeholder="Ingresar respuesta" />
+      </label>
+    </div>
+    <div class="form-group">
+      <button id="button-submit" type="submit">Verificar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -8,10 +8,6 @@ from django.utils import timezone
 
 class GestorRtaOperador:
     llamadaEnCurso = None
-    operador = {
-        'nombre': 'Test',
-        'apellido': 'Test'
-    }
 
     def nuevaRespuestaOperador(self):
         self.recibirLlamada()
@@ -21,10 +17,12 @@ class GestorRtaOperador:
         fechaHoraActual = self.obtenerFechaHoraActual()
         estadoEnCurso = self.buscarEstadoEnCurso()
         self.llamadaEnCurso.tomadaPorOperador(
-            self.operador,
             fechaHoraActual,
             estadoEnCurso
         )
+
+    def finCU(self):
+        pass
 
     def obtenerDatosLlamada(self):
         cliente = self.llamadaEnCurso.cliente.getNombre()

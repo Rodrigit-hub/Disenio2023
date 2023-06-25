@@ -6,10 +6,8 @@ from .estado import Estado
 class Llamada(models.Model):
     descripcionOperador = models.CharField(max_length=255, null=True)
     detalleAccionRequerida = models.TextField(null=True)
-    duracion = models.IntegerField(default=0)
+    duracion = models.CharField(max_length=50)
     encuestaEnviada = models.BooleanField(null=True)
-    observacionAuditor = models.TextField(null=True)
-    operador = None
 
     # Foreign Keys
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
@@ -21,9 +19,8 @@ class Llamada(models.Model):
     def calcularDuracion(self):
         pass
 
-    def tomadaPorOperador(self, operador, fechaHoraActual, estadoEnCurso):
+    def tomadaPorOperador(self, fechaHoraActual, estadoEnCurso):
         self.estadoActual = estadoEnCurso
-        self.operador = operador
         from .cambio_estado import CambioEstado
         CambioEstado.objects.create(
             llamada=self,
@@ -42,6 +39,21 @@ class Llamada(models.Model):
         )
         self.estadoActual = estadoFinalizada
         self.save()
+        self.calcularDuracion()
+
+    def calcularDuracion(self):
+        from .cambio_estado import CambioEstado
+        primer_cambio = CambioEstado.objects.filter(
+            llamada=self
+        ).first()
+        ultimo_cambio = CambioEstado.objects.filter(
+            llamada=self
+        ).last()
+
+        diferencia = str(ultimo_cambio.fechaHoraCambio -
+                         primer_cambio.fechaHoraCambio)
+        self.setDuracion(diferencia)
+        return diferencia
 
     def getNombreClienteLlamada(self):
         return self.cliente.getNombre()

@@ -30,7 +30,7 @@ h2 {
   margin-bottom: 1rem;
 }
 
-h4 {
+.operador-h4 {
   margin: 0;
   text-align: end;
   font-size: 16px;
@@ -67,7 +67,8 @@ input[type='text'] {
   border-radius: 6px;
 }
 
-button[type='submit'] {
+button[type='submit'],
+#button-volver {
   display: block;
   width: 100%;
   padding: 10px;
@@ -79,7 +80,8 @@ button[type='submit'] {
   font-size: 16px;
 }
 
-button[type='submit']:hover {
+button[type='submit']:hover,
+#button-volver:hover {
   background-color: #45a049;
 }
 
@@ -88,4 +90,17 @@ button[type='submit']:hover {
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.textarea-label span {
+  margin-bottom: 0.5rem;
+}
+
+#descripcion_llamada {
+  width: 100%;
+  resize: none;
+}
+
+.validacion-correcta {
+  text-align: start;
 }

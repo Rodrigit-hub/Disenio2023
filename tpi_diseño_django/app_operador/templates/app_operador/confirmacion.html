@@ -1,0 +1,28 @@
+{% extends "app_operador/base.html" %} {% block content %}
+<form
+  id="form_finalizar_validacion"
+  action="finalizar_validacion"
+  class="form"
+  method="POST">
+  {% csrf_token %}
+  <div class="form-group">
+    <h5 class="validacion-correcta">Validación correcta ✅️</h5>
+    <label class="textarea-label" for="descripcion_llamada">
+      <span>Registrar descripcion de la llamada:</span>
+      <textarea
+        id="descripcion_llamada"
+        placeholder="Ingrese descripcion de la llamada"
+        rows="8"
+        cols="48"></textarea>
+    </label>
+  </div>
+  <select>
+    <option>Acción 1</option>
+    <option>Acción 2</option>
+    <option>Acción 3</option>
+  </select>
+  <div class="form-group">
+    <button type="submit">Finalizar</button>
+  </div>
+</form>
+{% endblock %}

@@ -22,7 +22,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("verificar_validacion", views.verificar_validacion,
          name="verificar_validacion"),
-    # path("segundo_form", views.segundo_form,
-    #      name="segundo_form"),
+    path("informacion_valida", views.informacion_valida,
+         name="informacion_valida"),
+    path("informacion_invalida", views.informacion_invalida,
+         name="informacion_invalida"),
+    path("finalizar_validacion", views.finalizar_validacion,
+         name="finalizar_validacion"),
     path('', views.index)
 ]

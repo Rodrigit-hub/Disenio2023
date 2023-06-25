@@ -1,0 +1,9 @@
+{% extends "app_operador/base.html" %} {% block content %}
+<h2>Validacion incorrecta</h2>
+<button id="button-volver">Volver</button>
+<script>
+  document.querySelector('#button-volver').addEventListener('click', () => {
+    window.location.href = '/'
+  })
+</script>
+{% endblock %}
