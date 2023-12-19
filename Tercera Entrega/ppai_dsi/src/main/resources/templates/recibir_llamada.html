@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la Llamada</title>
+
+    <!-- Agregar enlaces a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Agregar enlaces a Bootstrap JS y Popper.js (necesario para algunos componentes de Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- ICONO -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <script th:inline="javascript">
+        function validarFormulario() {
+            // Obtener todos los campos de texto en el formulario
+            var camposTexto = document.querySelectorAll('input[type="text"]');
+            
+            // Verificar si todos los campos de texto están llenos
+            for (var i = 0; i < camposTexto.length; i++) {
+                if (!camposTexto[i].value.trim()) {
+                    alert('Por favor, completa todos los campos antes de validar.');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+    </script>
+
+</head>
+
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h2 class="text-info text-center mb-4 font-italic">Detalles de la Llamada</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text"><strong>Cliente:</strong> <span th:text="${cliente}"></span></p>
+                <p class="card-text"><strong>Categoría:</strong> <span th:text="${categoria}"></span></p>
+                <p class="card-text"><strong>Opción de Llamada:</strong> <span th:text="${opcionLlamada}"></span></p>
+                <p class="card-text"><strong>Subopción:</strong> <span th:text="${subopcion}"></span></p>
+            </div>
+        </div>
+
+        <form th:action="@{/validar_llamada}" method="POST" onsubmit="return validarFormulario()" class="mt-4">
+            <div th:each="validacion : ${lista_validaciones}" class="form-group">
+                <label class="font-weight-bold" th:text="${validacion.nombre}"></label>
+                <input type="text" th:name="${validacion.id_validacion}" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Validar</button>
+
+        </form>
+        <form th:action="@{/cancelar_llamada}" method="POST" class="mt-4">
+            <button type="submit" class="btn btn-danger">Cancelar Llamada</button>
+        </form>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la Llamada</title>
+
+    <!-- Agregar enlaces a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Agregar enlaces a Bootstrap JS y Popper.js (necesario para algunos componentes de Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- ICONO -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+</head>
+
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1 class="text-info text-center mb-4 font-italic">Detalles de la Llamada</h1>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <p class="card-text"><strong>Cliente:</strong></p>
+                <p class="card-text"><strong>Categoría:</strong></p>
+                <p class="card-text"><strong>Opción de Llamada:</strong></p>
+                <p class="card-text"><strong>Subopción:</strong></p>
+            </div>
+        </div>
+
+        <form th:action="@{/recibir_llamada}" method="POST" class="text-center mt-4">
+            <button type="submit" class="btn btn-success">Recibir Llamada</button>
+        </form>
+    </div>
+
+</body>
+
+</html>

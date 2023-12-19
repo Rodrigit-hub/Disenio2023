@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación Exitosa</title>
+
+    <!-- Agregar enlaces a los estilos de Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- ICONO -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="col-md-8 card text-center mx-auto p-0">
+            <div class="card-header bg-success text-white">
+                <h1>¡Validación EXITOSA!</h1>
+            </div>
+            <form th:action="@{/finalizar_llamada}" method="POST" class="mt-4">
+
+                <div class="card-body">
+                    <p class="card-text">Las respuestas ingresadas son correctas.</p>
+                    <p class="card-text">Registro de respuesta para el cliente: <strong th:text="${cliente.nombreCompleto}"></strong></p>
+                    <br>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción de la llamada:</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accion">Seleccionar acción a realizar:</label>
+                        <select class="form-control" id="accion" name="accion" required>
+                            <option value="Cancelar tarjeta" selected>Cancelar tarjeta</option>
+                            <option value="Mantener tarjeta activa">Mantener tarjeta activa</option>
+                            <option value="Enviar nueva Tarjeta">Enviar nueva tarjeta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="accion">El cliente respondio la encuesta?</label>
+                        <select class="form-control" id="encuesta" name="encuesta" required>
+                            <option value="false" selected>No</option>
+                            <option value="true">Si</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success">Finalizar</button>
+                </div>
+            </form>
+            <div class="card-footer">
+                <form th:action="@{/cancelar_llamada}" method="POST">
+                    <button type="submit" class="btn btn-danger">Cancelar Llamada</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

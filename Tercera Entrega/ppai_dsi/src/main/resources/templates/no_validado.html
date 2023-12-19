@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación Fallida</title>
+
+    <!-- Agregar enlaces a los estilos de Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- ICONO -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card text-center">
+            <div class="card-header bg-danger text-white">
+                <h1>¡Validación INCORRECTA!</h1>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Las respuestas ingresadas no son correctas.</p>
+                <p class="card-text">Registro de respuesta para el cliente: <strong th:text="${cliente.nombreCompleto}"></strong></p>
+            </div>
+            <div class="card-footer">
+                <a href="/recibir_llamada" class="btn btn-primary">Volver</a>
+                <form th:action="@{/cancelar_llamada}" method="POST" class="mt-4">
+                    <button type="submit" class="btn btn-danger">Cancelar Llamada</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
