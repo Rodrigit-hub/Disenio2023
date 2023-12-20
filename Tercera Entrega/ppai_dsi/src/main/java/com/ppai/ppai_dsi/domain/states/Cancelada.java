@@ -14,6 +14,13 @@ import jakarta.persistence.*;
 @Table(name = "cancelada")
 public class Cancelada extends Estado{
 
+    public Cancelada() {
+    }
+
+    public Cancelada(String nombre) {
+        super(nombre);
+    }
+
     @Override
     public boolean esFinalizada() {
         return false;

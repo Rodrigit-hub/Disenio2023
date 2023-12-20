@@ -14,6 +14,13 @@ import jakarta.persistence.*;
 @Table(name = "enCurso")
 public class EnCurso extends Estado{
 
+    public EnCurso() {
+    }
+
+    public EnCurso(String nombre) {
+        super(nombre);
+    }
+
     @Override
     public boolean esFinalizada() {
         return false;
@@ -93,11 +100,11 @@ public class EnCurso extends Estado{
     }
 
     public Estado crearEstadoFinalizado() {
-        return new Finalizada();
+        return new Finalizada("Finalizada");
     }
 
     public Estado crearEstadoCancelada() {
-        return new Cancelada();
+        return new Cancelada("Cancelada");
     }
 
     public CambioEstado crearCambioEstado(Date fechaHoraActual,Estado estado) {

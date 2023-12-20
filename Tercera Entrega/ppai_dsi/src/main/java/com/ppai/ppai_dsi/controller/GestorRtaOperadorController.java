@@ -54,13 +54,13 @@ public class GestorRtaOperadorController {
         Optional<Cliente> optionalCliente = servicesCliente.listarIdClientes(1);
         //Obtener categoria desde BD
         Optional<CategoriaLlamada> optionalCategoriaLlamada = servicesCategoriaLlamada.listarIdCategoriaLlamadas(1);
-        // Obtener el estado existente "Iniciada" desde la base de datos
-        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("Iniciada");
+        // Obtener el estado existente "EnCurso" desde la base de datos
+        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("EnCurso");
         
         //Calculo de fecha actual
         Date fechaCreacion = obtenerFechaYHoraActual();
 
-        if (optionalCliente.isPresent() && optionalCategoriaLlamada.isPresent()) {
+        if (optionalCliente.isPresent() && optionalCategoriaLlamada.isPresent() && optionalEstadoEnCurso.isPresent()) {
             llamada.setCliente(optionalCliente.get());
             llamada.setCategoriaLlamada(optionalCategoriaLlamada.get());
             llamada.setEstadoActual(optionalEstadoEnCurso.get());
@@ -162,7 +162,7 @@ public class GestorRtaOperadorController {
 
 
         // Obtener el estado existente "En Curso" desde la base de datos
-        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("En Curso");
+        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("EnCurso");
         if (optionalEstadoEnCurso.isPresent()){
             //PASO 36
             Estado estadoCurso = optionalEstadoEnCurso.get();
@@ -192,7 +192,7 @@ public class GestorRtaOperadorController {
         llamada.setEncuestaEnviada(false);
             
         // Obtener el estado existente "En Curso" desde la base de datos
-        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("En Curso");
+        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("EnCurso");
         if (optionalEstadoEnCurso.isPresent()){
             Estado estadoCurso = optionalEstadoEnCurso.get();
             llamada.cancelarLlamada(fechaHoraActual, estadoCurso, servicesCambioEstado, servicesEstado);

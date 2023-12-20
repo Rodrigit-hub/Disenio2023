@@ -14,6 +14,13 @@ import jakarta.persistence.*;
 @Table(name = "iniciada")
 public class Iniciada extends Estado{
 
+    public Iniciada() {
+    }
+
+    public Iniciada(String nombre) {
+        super(nombre);
+    }
+
     @Override
     public boolean esFinalizada() {
         return false;
