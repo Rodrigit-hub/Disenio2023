@@ -54,11 +54,11 @@ public class GestorRtaOperadorController {
         Optional<Cliente> optionalCliente = servicesCliente.listarIdClientes(1);
         //Obtener categoria desde BD
         Optional<CategoriaLlamada> optionalCategoriaLlamada = servicesCategoriaLlamada.listarIdCategoriaLlamadas(1);
-        // Obtener el estado existente "En Curso" desde la base de datos
-        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("En Curso");
+        // Obtener el estado existente "Iniciada" desde la base de datos
+        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("Iniciada");
         
         //Calculo de fecha actual
-        Date fechaCreacion = new Date();
+        Date fechaCreacion = obtenerFechaYHoraActual();
 
         if (optionalCliente.isPresent() && optionalCategoriaLlamada.isPresent()) {
             llamada.setCliente(optionalCliente.get());
@@ -156,17 +156,18 @@ public class GestorRtaOperadorController {
         llamada.setEncuestaEnviada(encuesta);
 
         CambioEstado cambioEstadoAnterior = llamada.getCambioEstado();
-
+        
         //PASO 34
-        Date fechaHoraActual = new Date();
+        Date fechaHoraActual = obtenerFechaYHoraActual();
 
-        // PASO 35 - Obtener el estado existente "Finalizada" desde la base de datos
-        Optional<Estado> optionalEstadoFinalizada = servicesEstado.obtenerEstadoPorNombre("Finalizada");
-        if (optionalEstadoFinalizada.isPresent()){
+
+        // Obtener el estado existente "En Curso" desde la base de datos
+        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("En Curso");
+        if (optionalEstadoEnCurso.isPresent()){
             //PASO 36
-            Estado estadoFinalizada = optionalEstadoFinalizada.get();
+            Estado estadoCurso = optionalEstadoEnCurso.get();
             //PASO 37
-            llamada.finalizarLlamada(fechaHoraActual, estadoFinalizada, servicesCambioEstado);
+            llamada.finalizarLlamada(fechaHoraActual, estadoCurso, servicesCambioEstado, servicesEstado);
         }
 
         //PASO 39
@@ -183,15 +184,20 @@ public class GestorRtaOperadorController {
 
         CambioEstado cambioEstadoAnterior = llamada.getCambioEstado();
 
-        Date fechaHoraActual = new Date();
+        Date fechaHoraActual = obtenerFechaYHoraActual();
 
-        // Obtener el estado existente "Cancelada" desde la base de datos
-        Optional<Estado> optionalEstadoCancelada = servicesEstado.obtenerEstadoPorNombre("Cancelada");
-        if (optionalEstadoCancelada.isPresent()){
-            Estado estadoCancelada = optionalEstadoCancelada.get();
-            //USO EL MISMO METODO PARA FINALIZAR PERO LE PASO EL ESTADO DE CANCELADA
-            llamada.finalizarLlamada(fechaHoraActual, estadoCancelada, servicesCambioEstado);
+        //Setear los campos en vacio
+        llamada.setDescripcionOperador("");
+        llamada.setDetalleAccionRequerida("");
+        llamada.setEncuestaEnviada(false);
+            
+        // Obtener el estado existente "En Curso" desde la base de datos
+        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("En Curso");
+        if (optionalEstadoEnCurso.isPresent()){
+            Estado estadoCurso = optionalEstadoEnCurso.get();
+            llamada.cancelarLlamada(fechaHoraActual, estadoCurso, servicesCambioEstado, servicesEstado);
         }
+
 
         llamada.calcularDuracion(cambioEstadoAnterior);
 
@@ -200,4 +206,8 @@ public class GestorRtaOperadorController {
         return "cancelar";
     }
     
+
+    public Date obtenerFechaYHoraActual() {
+        return new Date();
+    }
 }

@@ -1,6 +1,9 @@
 package com.ppai.ppai_dsi.domain;
 
 import java.util.Date;
+
+import com.ppai.ppai_dsi.domain.states.EnCurso;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,8 +16,14 @@ public class CambioEstado {
     private Integer id_cambioEstado;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "fecha_hora_cambio")
-    private Date fechaHoraCambio;
+    @Column(name = "fecha_hora_inicio_cambio")
+    private Date fechaHoraInicioCambio;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fecha_hora_fin_cambio")
+    private Date fechaHoraFinCambio;
+
+// AGREGAR FECHA HORA FIN CAMBIO ESTADO
 
     @ManyToOne
     @JoinColumn(name = "estado_id", referencedColumnName = "id_estado", nullable = false)
@@ -24,8 +33,8 @@ public class CambioEstado {
     public CambioEstado() {
     }
 
-    public CambioEstado(Date fechaHoraCambio, Estado estado ) {
-        this.fechaHoraCambio = fechaHoraCambio;
+    public CambioEstado(Date fechaHoraInicioCambio, Estado estado ) {
+        this.fechaHoraInicioCambio = fechaHoraInicioCambio;
         this.estado = estado;
     }
 
@@ -33,13 +42,6 @@ public class CambioEstado {
         return id_cambioEstado;
     }
 
-    public Date getFechaHoraCambio() {
-        return fechaHoraCambio;
-    }
-
-    public void setFechaHoraCambio(Date fechaHoraCambio) {
-        this.fechaHoraCambio = fechaHoraCambio;
-    }
 
     public Estado getEstado() {
         return estado;
@@ -47,6 +49,26 @@ public class CambioEstado {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
+    }
+
+    public Date getFechaHoraInicioCambio() {
+        return fechaHoraInicioCambio;
+    }
+
+    public void setFechaHoraInicioCambio(Date fechaHoraInicioCambio) {
+        this.fechaHoraInicioCambio = fechaHoraInicioCambio;
+    }
+
+    public Date getFechaHoraFinCambio() {
+        return fechaHoraFinCambio;
+    }
+
+    public void setFechaHoraFinCambio(Date fechaHoraFinCambio) {
+        this.fechaHoraFinCambio = fechaHoraFinCambio;
+    }
+
+    public boolean esEstadoActual(EnCurso enCurso) {
+        return enCurso.esEnCurso();
     }
 
 }

@@ -4,6 +4,7 @@ package com.ppai.ppai_dsi.domain;
 import java.util.Date;
 
 import com.ppai.ppai_dsi.interfaceServices.ICambioEstadoServices;
+import com.ppai.ppai_dsi.interfaceServices.IEstadoServices;
 
 import jakarta.persistence.*;
 
@@ -138,38 +139,38 @@ public class Llamada {
         setCambioEstado(cambioEstado);
     }
 
-    //USAMOS EL MISMO METODO PARA CANCELAR LA LLAMADA PASANDOLE EL ESTADO "CANCELADA"
-    public void finalizarLlamada(Date fechaHoraActual, Estado estadoFinal, ICambioEstadoServices servicesCambioEstado) {
-        //Finalizar llamada (o cancelar)
-        setEstadoActual(estadoFinal);
-        //Crear cambio estado
-        CambioEstado cambioEstado = new CambioEstado(fechaHoraActual, estadoFinal);
-        // Guardar el cambio de estado en la base de datos
+    public void finalizarLlamada(Date fechaHoraActual, Estado estadoCurso, ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
+        CambioEstado cambioEstado = getCambioEstado();
+        //Setear y guardar en BD la fechaHoraFinCambio
+        cambioEstado.setFechaHoraFinCambio(fechaHoraActual);
         servicesCambioEstado.save(cambioEstado);
-        // Asignar el cambio de estado a la llamada
-        setCambioEstado(cambioEstado);
+        estadoCurso.finalizarLlamada(fechaHoraActual, this, cambioEstado, servicesCambioEstado, servicesEstado);
+
+    }
+
+    public void cancelarLlamada(Date fechaHoraActual, Estado estadoCurso, ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
+        CambioEstado cambioEstado = getCambioEstado();
+        //Setear y guardar en BD la fechaHoraFinCambio
+        cambioEstado.setFechaHoraFinCambio(fechaHoraActual);
+        servicesCambioEstado.save(cambioEstado);
+        estadoCurso.cancelarLlamada(fechaHoraActual, this, cambioEstado, servicesCambioEstado, servicesEstado);
+
     }
 
     public void calcularDuracion(CambioEstado cambioEstadoAnterior) {
-        CambioEstado cambioEstadoActual = getCambioEstado();
 
-        // Verificar que ambos cambios de estado existan
-        if (cambioEstadoActual != null && cambioEstadoAnterior != null) {
-            // Obtener las fechas de los cambios de estado
-            Date fechaFinal = cambioEstadoActual.getFechaHoraCambio();
-            Date fechaAnterior = cambioEstadoAnterior.getFechaHoraCambio();
+        // Obtener las fechas de los cambios de estado
+        Date fechaFinal = cambioEstadoAnterior.getFechaHoraFinCambio();
+        Date fechaAnterior = cambioEstadoAnterior.getFechaHoraInicioCambio();
 
-            // Calcular la diferencia en milisegundos
-            long diferenciaEnMilisegundos = fechaFinal.getTime() - fechaAnterior.getTime();
+        // Calcular la diferencia en milisegundos
+        long diferenciaEnMilisegundos = fechaFinal.getTime() - fechaAnterior.getTime();
 
-            // Convertir la diferencia a un formato más legible
-            String duracionFormateada = formatearDuracion(diferenciaEnMilisegundos);
+        // Convertir la diferencia a un formato más legible
+        String duracionFormateada = formatearDuracion(diferenciaEnMilisegundos);
 
-            // Asignar la duración calculada
-            setDuracion(duracionFormateada);
-        } else {
-            setDuracion("0");
-        }
+        // Asignar la duración calculada
+        setDuracion(duracionFormateada);
 
     }
 

@@ -1,10 +1,17 @@
 package com.ppai.ppai_dsi.domain;
 
+import java.util.Date;
+
+import com.ppai.ppai_dsi.interfaceServices.ICambioEstadoServices;
+import com.ppai.ppai_dsi.interfaceServices.IEstadoServices;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "estado")
-public class Estado {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_estado", discriminatorType = DiscriminatorType.STRING)
+public abstract class Estado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,8 +20,7 @@ public class Estado {
 
     @Column(name = "nombre")
     private String nombre;
- 
-    
+
     public Estado() {
     }
 
@@ -34,21 +40,17 @@ public class Estado {
         this.nombre = nuevoNombre;
     }
 
-    public boolean esFinalizada() {
-        return getNombre().equalsIgnoreCase("Finalizada");
-    }
+    public abstract boolean esFinalizada();
 
-    public boolean esIniciada() {
-        return getNombre().equalsIgnoreCase("Iniciada");
-    }
+    public abstract boolean esIniciada();
 
-    public boolean esEnCurso() {
-        return getNombre().equalsIgnoreCase("En Curso");
-    }
+    public abstract boolean esEnCurso();
 
-    public boolean esCancelada() {
-        return getNombre().equalsIgnoreCase("Cancelada");
-    }
+    public abstract boolean esCancelada();
 
+    public abstract void finalizarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado cambioEstado, 
+    ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado);
 
+    public abstract void cancelarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado cambioEstado, 
+    ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado);
 }
