@@ -17,6 +17,7 @@ import com.ppai.ppai_dsi.domain.Cliente;
 import com.ppai.ppai_dsi.domain.Estado;
 import com.ppai.ppai_dsi.domain.Llamada;
 import com.ppai.ppai_dsi.domain.Validacion;
+import com.ppai.ppai_dsi.domain.iterators.IIterador;
 import com.ppai.ppai_dsi.interfaceServices.ICambioEstadoServices;
 import com.ppai.ppai_dsi.interfaceServices.ICategoriaLlamadaServices;
 import com.ppai.ppai_dsi.interfaceServices.IClienteServices;
@@ -95,19 +96,77 @@ public class GestorRtaOperadorController {
         return estado.esEnCurso();
     }
 
-    //PASO 8
+    //TODO SE APLICA PATRON ITERATOR
     public void obtenerDatosLlamada(Model model, Llamada llamada) {
+        // Declarar variables fuera del bucle
+        String clienteLlamada = null;
+        String nombreCategoria = null;
+        String nombreOpcion = null;
+        String nombreSubOpcion = null;
 
-        String cliente = llamada.getCliente().getNombreCompleto();
+        // Obtener un iterador para Llamada
+        IIterador iteradorLlamada = crearIterador();
 
-        String categoria = llamada.getCategoriaLlamada().getNombre();
-        String opcionLlamada = llamada.getCategoriaLlamada().getOpcionLlamada().getNombre();
-        String subopcion = llamada.getCategoriaLlamada().getOpcionLlamada().getSubOpcionLlamada().getNombre();
+        iteradorLlamada.primero();
+        
+        while (!iteradorLlamada.haTerminado()) {
+            // Obtener el nombre de cada elemento de Llamada
+            clienteLlamada = (String) iteradorLlamada.actual();
+            // Realizar operaciones con el nombre
+            System.out.println("Nombre de Llamada: " + clienteLlamada);
 
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("categoria", categoria);
-        model.addAttribute("opcionLlamada", opcionLlamada);
-        model.addAttribute("subopcion", subopcion);
+            // Obtener un iterador para CategoriaLlamada (asumiendo que existe una relación)
+            IIterador iteradorCategoria = llamada.getCategoriaLlamada().crearIterador();
+
+            while (!iteradorCategoria.haTerminado()) {
+                // Obtener el nombre de cada elemento de CategoriaLlamada
+                nombreCategoria = (String) iteradorCategoria.actual();
+                // Realizar operaciones con el nombre
+                System.out.println("Nombre de CategoriaLlamada: " + nombreCategoria);
+
+                // Obtener un iterador para OpcionLlamada
+                IIterador iteradorOpcion = llamada.getCategoriaLlamada().getOpcionLlamada().crearIterador();
+
+                while (!iteradorOpcion.haTerminado()) {
+                    // Obtener el nombre de cada elemento de OpcionLlamada
+                    nombreOpcion = (String) iteradorOpcion.actual();
+                    // Realizar operaciones con el nombre
+                    System.out.println("Nombre de OpcionLlamada: " + nombreOpcion);
+
+                    // Obtener un iterador para SubOpcionLlamada
+                    IIterador iteradorSubOpcion = llamada.getCategoriaLlamada().getOpcionLlamada().getSubOpcionLlamada().crearIterador();                   
+                  
+                    while (!iteradorSubOpcion.haTerminado()) {
+                        // Obtener el nombre de cada elemento de SubOpcionLlamada
+                        nombreSubOpcion = (String) iteradorSubOpcion.actual();
+                        // Realizar operaciones con el nombre
+                        System.out.println("Nombre de SubOpcionLlamada: " + nombreSubOpcion);
+
+                        // Mover al siguiente elemento de SubOpcionLlamada
+                        iteradorSubOpcion.siguiente();
+                    }
+
+                    // Mover al siguiente elemento de OpcionLlamada
+                    iteradorOpcion.siguiente();
+                }
+
+                // Mover al siguiente elemento de CategoriaLlamada
+                iteradorCategoria.siguiente();
+            }
+
+            // Mover al siguiente elemento de Llamada
+            iteradorLlamada.siguiente();
+        }
+
+        // Puedes agregar los nombres al modelo si necesitas usarlos en la vista
+        model.addAttribute("cliente", clienteLlamada);
+        model.addAttribute("categoria", nombreCategoria);
+        model.addAttribute("opcionLlamada", nombreOpcion);
+        model.addAttribute("subOpcion", nombreSubOpcion);
+    }
+    
+    public IIterador crearIterador() {
+        return llamada.crearIterador();
     }
 
     //PASO 13

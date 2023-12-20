@@ -3,6 +3,9 @@ package com.ppai.ppai_dsi.domain;
 
 import java.util.Date;
 
+import com.ppai.ppai_dsi.domain.iterators.IAgregado;
+import com.ppai.ppai_dsi.domain.iterators.IIterador;
+import com.ppai.ppai_dsi.domain.iterators.IteradorLlamada;
 import com.ppai.ppai_dsi.interfaceServices.ICambioEstadoServices;
 import com.ppai.ppai_dsi.interfaceServices.IEstadoServices;
 
@@ -10,7 +13,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "llamada")
-public class Llamada {
+public class Llamada implements IAgregado{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -183,6 +186,12 @@ public class Llamada {
         minutos %= 60;
 
         return String.format("%02d:%02d:%02d", horas, minutos, segundos);
+    }
+    
+    //ITERADOR
+    @Override
+    public IIterador crearIterador() {
+        return new IteradorLlamada(this);
     }
 
 }

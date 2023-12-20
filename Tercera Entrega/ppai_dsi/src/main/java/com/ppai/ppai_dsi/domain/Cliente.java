@@ -23,9 +23,6 @@ public class Cliente {
     @Column(name = "nro_celular", length = 20)
     private String nroCelular;
 
-    // @ManyToOne
-    // @JoinColumn(name = "informacion_cliente", referencedColumnName = "id_infoCliente", nullable = false)
-    // private InformacionCliente infoCliente;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<InformacionCliente> infoCliente;
 

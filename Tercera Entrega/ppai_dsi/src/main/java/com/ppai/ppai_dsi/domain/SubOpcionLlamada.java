@@ -1,10 +1,14 @@
 package com.ppai.ppai_dsi.domain;
 
+import com.ppai.ppai_dsi.domain.iterators.IAgregado;
+import com.ppai.ppai_dsi.domain.iterators.IIterador;
+import com.ppai.ppai_dsi.domain.iterators.IteradorSubOpcionLlamada;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "sub_opcion_llamada")
-public class SubOpcionLlamada {
+public class SubOpcionLlamada implements IAgregado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +43,15 @@ public class SubOpcionLlamada {
 
     public void setNombre(String nuevoNombre) {
         this.nombre = nuevoNombre;
+    }
+
+    @Override
+    public IIterador crearIterador() {
+        return new IteradorSubOpcionLlamada(this);
+    }
+
+    public Object mostarDatos() {
+        return getNombre();
     }
     
 }

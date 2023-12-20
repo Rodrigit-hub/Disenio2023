@@ -1,10 +1,14 @@
 package com.ppai.ppai_dsi.domain;
 
+import com.ppai.ppai_dsi.domain.iterators.IAgregado;
+import com.ppai.ppai_dsi.domain.iterators.IIterador;
+import com.ppai.ppai_dsi.domain.iterators.IteradorOpcionLlamada;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "opcion_llamada")
-public class OpcionLlamada {
+public class OpcionLlamada implements IAgregado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,12 +17,6 @@ public class OpcionLlamada {
 
     @Column(name = "audio_mensaje_opciones")
     private String audioMensajeOpciones;
-
-    // @Column(name = "mensaje_subopciones")
-    // private String mensajeSubOpciones;   Se reemplaza con la relacion con subOpcionLlamada
-
-    // @Column(name = "nro_orden")
-    // private Integer nroOrden;    Se reemplaza con id
 
     @Column(name = "nombre")
     private String nombre;
@@ -64,15 +62,14 @@ public class OpcionLlamada {
     public void setSubOpcionLlamada(SubOpcionLlamada subOpcion) {
         this.subOpcionLlamada = subOpcion;
     }
-    
-    // public String getDescripcionConSubOpcion() {
-    //     return subOpcionLlamada.getNombre();
-    // }
 
-    // public List<Validacion> buscarValidaciones() {
-    //     return subOpcionLlamada.buscarValidaciones();
-    // }
+    @Override
+    public IIterador crearIterador() {
+        return new IteradorOpcionLlamada(this);
+    }
 
-
+    public Object mostarDatos() {
+        return getNombre();
+    }
 
 }
