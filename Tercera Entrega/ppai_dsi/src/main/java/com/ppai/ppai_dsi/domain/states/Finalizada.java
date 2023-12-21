@@ -40,6 +40,12 @@ public class Finalizada extends Estado{
     public boolean esCancelada() {
         return false;
     }
+    
+    @Override
+    public void tomadaPorOperador(Date fechaHoraActual, Llamada llamada,
+            ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
+        throw new UnsupportedOperationException("Unimplemented method 'tomadaPorOperador'");
+    }
 
     @Override
     public void finalizarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado cambioEstado,

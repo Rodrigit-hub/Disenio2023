@@ -132,30 +132,18 @@ public class Llamada implements IAgregado{
         this.categoriaLlamada = categoriaLlamada;
     }
 
-    public void tomadaPorOperador(Date fechaCreacion, Estado estadoActual, ICambioEstadoServices servicesCambioEstado) {
-        //PASO 6
-        //Crear cambio estado
-        CambioEstado cambioEstado = new CambioEstado(fechaCreacion, estadoActual);
-        // Guardar el cambio de estado en la base de datos
-        servicesCambioEstado.save(cambioEstado);
-        // Asignar el cambio de estado a la llamada
-        setCambioEstado(cambioEstado);
+    public void tomadaPorOperador(Date fechaCreacion, Estado estadoIniciada, ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
+        estadoIniciada.tomadaPorOperador(fechaCreacion, this, servicesCambioEstado,servicesEstado);
     }
 
     public void finalizarLlamada(Date fechaHoraActual, Estado estadoCurso, ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
         CambioEstado cambioEstado = getCambioEstado();
-        //Setear y guardar en BD la fechaHoraFinCambio
-        cambioEstado.setFechaHoraFinCambio(fechaHoraActual);
-        servicesCambioEstado.save(cambioEstado);
         estadoCurso.finalizarLlamada(fechaHoraActual, this, cambioEstado, servicesCambioEstado, servicesEstado);
 
     }
 
     public void cancelarLlamada(Date fechaHoraActual, Estado estadoCurso, ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
         CambioEstado cambioEstado = getCambioEstado();
-        //Setear y guardar en BD la fechaHoraFinCambio
-        cambioEstado.setFechaHoraFinCambio(fechaHoraActual);
-        servicesCambioEstado.save(cambioEstado);
         estadoCurso.cancelarLlamada(fechaHoraActual, this, cambioEstado, servicesCambioEstado, servicesEstado);
 
     }

@@ -41,21 +41,27 @@ public class EnCurso extends Estado{
         return false;
     }
 
-
+    @Override
+    public void tomadaPorOperador(Date fechaHoraActual, Llamada llamada,
+            ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
+        throw new UnsupportedOperationException("Unimplemented method 'tomadaPorOperador'");
+    }
 
     @Override
-    public void finalizarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado cambioEstado,
+    public void finalizarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado ultimoCambioEstado,
             ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
                 
+        
         //Comprobar si el cambioEstado esta en estado "EnCurso"
-        if (buscarCambioEstado(cambioEstado)) {
+        if (buscarCambioEstado(ultimoCambioEstado)) {
+
+            //Setear y guardar en BD la fechaHoraFinCambio del cambioEstadoAnterior
+            ultimoCambioEstado.setFechaHoraFinCambio(fechaHoraActual);
+            servicesCambioEstado.save(ultimoCambioEstado);
+
             //Crear estado finalizado
             Estado estadoFinalizada = crearEstadoFinalizado();
             servicesEstado.save(estadoFinalizada);
-
-            //Setear y guardar en BD la fechaHoraFinCambio
-            cambioEstado.setFechaHoraFinCambio(fechaHoraActual);
-            servicesCambioEstado.save(cambioEstado);
 
             //Crear cambio estado
             CambioEstado nuevoCambioEstado = crearCambioEstado(fechaHoraActual, estadoFinalizada);
@@ -71,17 +77,17 @@ public class EnCurso extends Estado{
     }
 
     @Override
-    public void cancelarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado cambioEstado,
+    public void cancelarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado ultimoCambioEstado,
             ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado) {
 
-        if (buscarCambioEstado(cambioEstado)) {
+        if (buscarCambioEstado(ultimoCambioEstado)) {
+            //Setear y guardar en BD la fechaHoraFinCambio
+            ultimoCambioEstado.setFechaHoraFinCambio(fechaHoraActual);
+            servicesCambioEstado.save(ultimoCambioEstado);
+
             //Crear estado cancelado
             Estado estadoCancelada = crearEstadoCancelada();
             servicesEstado.save(estadoCancelada);
-
-            //Setear y guardar en BD la fechaHoraFinCambio
-            cambioEstado.setFechaHoraFinCambio(fechaHoraActual);
-            servicesCambioEstado.save(cambioEstado);
 
             //Crear cambio estado
             CambioEstado nuevoCambioEstado = crearCambioEstado(fechaHoraActual, estadoCancelada);

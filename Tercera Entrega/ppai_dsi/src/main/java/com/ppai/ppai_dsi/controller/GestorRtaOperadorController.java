@@ -55,30 +55,22 @@ public class GestorRtaOperadorController {
         Optional<Cliente> optionalCliente = servicesCliente.listarIdClientes(1);
         //Obtener categoria desde BD
         Optional<CategoriaLlamada> optionalCategoriaLlamada = servicesCategoriaLlamada.listarIdCategoriaLlamadas(1);
-        // Obtener el estado existente "EnCurso" desde la base de datos
-        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("EnCurso");
+        // Obtener el estado existente "Iniciada" desde la base de datos
+        Optional<Estado> optionalEstadoIniciada = servicesEstado.obtenerEstadoPorNombre("Iniciada");
         
         //Calculo de fecha actual
         Date fechaCreacion = obtenerFechaYHoraActual();
 
-        if (optionalCliente.isPresent() && optionalCategoriaLlamada.isPresent() && optionalEstadoEnCurso.isPresent()) {
+        if (optionalCliente.isPresent() && optionalCategoriaLlamada.isPresent() && optionalEstadoIniciada.isPresent()) {
             llamada.setCliente(optionalCliente.get());
             llamada.setCategoriaLlamada(optionalCategoriaLlamada.get());
-            llamada.setEstadoActual(optionalEstadoEnCurso.get());
+            llamada.setEstadoActual(optionalEstadoIniciada.get());
         }
 
         //Obtener estado actual de llamada
         Estado estadoActual = llamada.getEstadoActual();
 
-        //PASO 3
-        Boolean esEstadoEnCurso = buscarEstadoEnCurso(estadoActual);
-
-        //PASO 5
-        if(esEstadoEnCurso){
-            llamada.tomadaPorOperador(fechaCreacion, estadoActual, servicesCambioEstado);
-        } else {
-            System.out.println("La llamada no es estado en curso");
-        }
+        llamada.tomadaPorOperador(fechaCreacion, estadoActual, servicesCambioEstado, servicesEstado);
 
         //PASO 7
         obtenerDatosLlamada(model, llamada);
@@ -96,7 +88,7 @@ public class GestorRtaOperadorController {
         return estado.esEnCurso();
     }
 
-    //TODO SE APLICA PATRON ITERATOR
+    //SE APLICA PATRON ITERATOR
     public void obtenerDatosLlamada(Model model, Llamada llamada) {
         // Declarar variables fuera del bucle
         String clienteLlamada = null;
@@ -219,15 +211,10 @@ public class GestorRtaOperadorController {
         //PASO 34
         Date fechaHoraActual = obtenerFechaYHoraActual();
 
-
-        // Obtener el estado existente "En Curso" desde la base de datos
-        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("EnCurso");
-        if (optionalEstadoEnCurso.isPresent()){
-            //PASO 36
-            Estado estadoCurso = optionalEstadoEnCurso.get();
-            //PASO 37
-            llamada.finalizarLlamada(fechaHoraActual, estadoCurso, servicesCambioEstado, servicesEstado);
-        }
+        //Obtener el estado actual de la llamada
+        Estado estadoCurso = llamada.getEstadoActual();
+        //Finalizar llamada
+        llamada.finalizarLlamada(fechaHoraActual, estadoCurso, servicesCambioEstado, servicesEstado);
 
         //PASO 39
         llamada.calcularDuracion(cambioEstadoAnterior);
@@ -250,13 +237,10 @@ public class GestorRtaOperadorController {
         llamada.setDetalleAccionRequerida("");
         llamada.setEncuestaEnviada(false);
             
-        // Obtener el estado existente "En Curso" desde la base de datos
-        Optional<Estado> optionalEstadoEnCurso = servicesEstado.obtenerEstadoPorNombre("EnCurso");
-        if (optionalEstadoEnCurso.isPresent()){
-            Estado estadoCurso = optionalEstadoEnCurso.get();
-            llamada.cancelarLlamada(fechaHoraActual, estadoCurso, servicesCambioEstado, servicesEstado);
-        }
-
+        //Obtener el estado actual de la llamada
+        Estado estadoCurso = llamada.getEstadoActual();
+        //Cancelar Llamada
+        llamada.cancelarLlamada(fechaHoraActual, estadoCurso, servicesCambioEstado, servicesEstado);
 
         llamada.calcularDuracion(cambioEstadoAnterior);
 

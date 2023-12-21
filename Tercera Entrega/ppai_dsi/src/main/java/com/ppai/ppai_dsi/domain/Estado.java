@@ -48,9 +48,12 @@ public abstract class Estado {
 
     public abstract boolean esCancelada();
 
-    public abstract void finalizarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado cambioEstado, 
+    public abstract void tomadaPorOperador(Date fechaHoraActual, Llamada llamada,
     ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado);
 
-    public abstract void cancelarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado cambioEstado, 
+    public abstract void finalizarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado ultimoCambioEstado, 
+    ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado);
+
+    public abstract void cancelarLlamada(Date fechaHoraActual, Llamada llamada, CambioEstado ultimoCambioEstado, 
     ICambioEstadoServices servicesCambioEstado, IEstadoServices servicesEstado);
 }
